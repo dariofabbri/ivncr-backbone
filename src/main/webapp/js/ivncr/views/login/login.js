@@ -50,8 +50,8 @@ define([
 			    $("form>legend").after(
 			   		_.template(alertTemplate, {
 							alertClass: "alert-error", 
-							title: "Error", 
-							message: "Wrong credentials."}));
+							title: "Errore", 
+							message: "Le credenziali immesse non sono valide."}));
 			} else {
 			    Backbone.history.navigate("home", true);	
 			}

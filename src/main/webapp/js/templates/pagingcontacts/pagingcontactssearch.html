@@ -1,40 +1,40 @@
 <form class="well form-horizontal">
-	<legend>Search form</legend>
+	<legend>Pannello di ricerca</legend>
 	<div class="control-group">
-		<label class="control-label" for="firstname">First name: </label>
+		<label class="control-label" for="firstname">Nome: </label>
 		<div class="controls">
 			<input 
 				id="firstname" 
 				type="text" 
-				placeholder="Type part of the first name to filter"
+				placeholder="Scrivi parte del nome per filtrare la lista"
 				value="<%=collection.queryArguments.firstName%>" />
 			<span class="help-inline"></span>
 		</div>
 	</div>
 	<div class="control-group">
-		<label class="control-label" for="lastname">Last name: </label>
+		<label class="control-label" for="lastname">Cognome: </label>
 		<div class="controls">
 			<input 
 				id="lastname" 
 				type="text" 
-				placeholder="Type part of the last name to filter" 
+				placeholder="Scrivi parte del cognome per filtrare la lista" 
 				value="<%=collection.queryArguments.lastName%>"/>
 			<span class="help-inline"></span>
 		</div>
 	</div>
 	<div class="control-group">
-		<label class="control-label" for="phonenumber">Phone number: </label>
+		<label class="control-label" for="phonenumber">Numero di telefono: </label>
 		<div class="controls">
 			<input 
 				id="phonenumber" 
 				type="text" 
-				placeholder="Type part of the phone number to filter"
+				placeholder="Scrivi parte del numero di telefono per filtrare la lista"
 				value="<%=collection.queryArguments.phoneNumber%>" />
 			<span class="help-inline"></span>
 		</div>
 	</div>
 	<div class="form-actions">
-		<a id="cancel" class="btn">Cancel</a>
-		<a id="search" class="btn btn-primary">Search</a>
+		<a id="cancel" class="btn">Annulla</a>
+		<a id="search" class="btn btn-primary">Cerca</a>
 	</div>
 </form>

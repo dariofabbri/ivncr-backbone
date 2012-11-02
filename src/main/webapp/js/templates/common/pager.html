@@ -1,5 +1,15 @@
 <div class="span6">
-	Found <%=collection.records%> record
+<%
+if(collection.records == 1) {
+%>
+	Un record trovato
+<%
+} else {
+%>
+	Trovati <%=collection.records%> record
+<%
+}
+%>
 </div>
 
 <div class="pagination pagination-right span6 remove-top-margin">

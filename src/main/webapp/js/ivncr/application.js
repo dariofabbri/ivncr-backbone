@@ -178,8 +178,8 @@ require([
 						// Signal the unauthorized access.
 						//
 						application.modalDialog.show({
-							title: "Error",
-							message: "Unauthorized access to the server detected, probably the session has expired. You will now be taken to the login page.",
+							title: "Errore",
+							message: "Il server ha rilevato un accesso non autorizzato, probabilmente la sessione è scaduta. Premi OK per visualizzare la pagina di login.",
 							okCaption: "OK",
 							okCallback: function() {
 								Backbone.history.navigate("login", true);

@@ -23,9 +23,9 @@ define([
 		removeItem: function() {
 
 			application.modalDialog.show({
-				title: "Warning",
-				message: "Do you confirm the deletion of the specified contact?",
-				okCaption: "Yes",
+				title: "Attenzione",
+				message: "Confermi la cancellazione del contatto selezionato?",
+				okCaption: "sì",
 				okCallback: this.doRemoveItem,
 				showOk: true,
 				cancelCaption: "No",

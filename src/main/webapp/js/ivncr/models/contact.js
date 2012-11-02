@@ -20,22 +20,22 @@ define([
 			
 			if(!_.isUndefined(changed.firstName)) {
 				if(_.isEmpty(changed.firstName)) {
-					errors.firstName = "The field is required.";
+					errors.firstName = "Il campo è obbligatorio.";
 				}
 			}
 			
 			if(!_.isUndefined(changed.lastName)) {
 				if(_.isEmpty(changed.lastName)) {
-					errors.lastName = "The field is required.";
+					errors.lastName = "Il campo è obbligatorio.";
 				}
 			}
 			
 			if(!_.isUndefined(changed.phoneNumber)) {
 				if(_.isEmpty(changed.phoneNumber)) {
-					errors.phoneNumber = "The field is required.";
+					errors.phoneNumber = "Il campo è obbligatorio.";
 				}
 				else if(!/^[+0123456789\. ]+$/i.test(changed.phoneNumber)) {
-					errors.phoneNumber = "Invalid phone number specified.";
+					errors.phoneNumber = "Il valore introdotto non rappresenta un numero di telefono valido.";
 				}
 			}
 			
