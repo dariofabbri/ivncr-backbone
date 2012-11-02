@@ -1,0 +1,9 @@
+<Context>
+
+  <Resource name="jdbc/ivncr" auth="Container" type="javax.sql.DataSource"
+               maxActive="10" maxIdle="2" maxWait="10000"
+               username="ivncr" password="ivncr" 
+               driverClassName="org.postgresql.Driver"
+               url="jdbc:postgresql://localhost:5432/ivncr"/>
+
+</Context>
