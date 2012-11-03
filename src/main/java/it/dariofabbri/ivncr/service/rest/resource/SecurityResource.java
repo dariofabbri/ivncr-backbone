@@ -1,8 +1,9 @@
 package it.dariofabbri.ivncr.service.rest.resource;
 
 
-import it.dariofabbri.ivncr.service.rest.dto.CredentialsDTO;
-import it.dariofabbri.ivncr.service.rest.dto.TokenDTO;
+import it.dariofabbri.ivncr.service.rest.dto.SecurityDTO;
+
+import java.util.Date;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -31,9 +32,9 @@ public class SecurityResource {
 	@POST
 	@Path("/")
 	@Consumes("application/json")
-	public Response createSession(CredentialsDTO credentials) {
+	public Response createSession(SecurityDTO dto) {
 
-		if(credentials == null) {
+		if(dto == null) {
 			return Response
 				.status(Status.INTERNAL_SERVER_ERROR)
 				.entity("No credentials received.")
@@ -44,18 +45,20 @@ public class SecurityResource {
 		Subject currentUser = builder.buildSubject();
 
 		UsernamePasswordToken upt = new UsernamePasswordToken(
-				credentials.getUsername(),
-				credentials.getPassword());
+				dto.getUsername(),
+				dto.getPassword());
 		currentUser.login(upt);
 		String sessionId = currentUser.getSession(true).getId().toString();
-		
-		TokenDTO token = new TokenDTO();
-		token.setToken(sessionId);
-		
 		logger.info("Session id: " + sessionId);
+
+		dto.setPassword(null);
+		dto.setSecurityToken(sessionId);
+		dto.setLoggedOn(true);
+		dto.setLogonTs(new Date());
+
 		return Response
 			.ok()
-			.entity(token)
+			.entity(dto)
 			.build();
 	}
 	

@@ -202,7 +202,17 @@ require([
 		application.routers.push(new ContactsRouter());
 		application.routers.push(new PagingContactsRouter());
 		
-		application.loginInfo = new LoginInfo();
+		application.buildNewLoginInfo = function() {
+
+			if(application.loginInfo) {
+				application.loginInfo.off();
+			}
+			
+			application.loginInfo = new LoginInfo();
+			
+			application.loginInfo.on("destroy", application.buildNewLoginInfo, application);
+		};
+		application.buildNewLoginInfo();
 		
 		application.modalDialog = new ModalDialogView();
 		$("#modaldialog").html(application.modalDialog.render().el);

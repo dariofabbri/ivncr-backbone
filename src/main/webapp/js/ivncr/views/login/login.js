@@ -45,16 +45,20 @@ define([
 			
 			var username = $("#username").val();
 			var password = $("#password").val();
-			if(!application.loginInfo.doLogin(username, password)) {
-				$("#notification").remove();
-			    $("form>legend").after(
-			   		_.template(alertTemplate, {
-							alertClass: "alert-error", 
-							title: "Errore", 
-							message: "Le credenziali immesse non sono valide."}));
-			} else {
-			    Backbone.history.navigate("home", true);	
-			}
+			
+			application.loginInfo.save({username: username,	password: password}, {
+				success: function() {
+					Backbone.history.navigate("home", true);
+				},
+				error: function() {
+					$("#notification").remove();
+				    $("form>legend").after(
+				   		_.template(alertTemplate, {
+								alertClass: "alert-error", 
+								title: "Errore", 
+								message: "Le credenziali immesse non sono valide."}));
+				}
+			});
 		}
 	});
 	

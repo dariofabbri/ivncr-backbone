@@ -13,7 +13,7 @@ define([
 		},
 		
 		urlRoot: "/ivncr/api/contacts",			
-		
+
 		validate: function(changed) {
 			
 			var errors = {};

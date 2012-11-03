@@ -11,14 +11,6 @@ define([
 			"click a#logout": "logout"
 		},
 
-		initialize: function() {
-			this.model.on("change:loggedOn", this.evaluateLogon, this);
-		},
-
-		onClose: function() {
-			this.model.off("change:loggedOn", this.evaluateLogon);
-		},
-
 		render: function() {
 
 			this.$el.html(_.template(footerTemplate, this.model.toJSON()));
@@ -27,15 +19,10 @@ define([
 		
 		logout: function() {
 			
-			this.model.doLogout();
-		},
-		
-		evaluateLogon: function() {
-			
-			if(!this.model.get("loggedOn")) {
+			this.model.destroy({success: function() {
 				
 				Backbone.history.navigate("login", true);
-			}
+			}});
 		}
 	});
 	
