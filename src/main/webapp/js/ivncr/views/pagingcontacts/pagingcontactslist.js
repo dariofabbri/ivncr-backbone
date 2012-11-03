@@ -14,7 +14,7 @@ define([
 		events: {
 			"click a#add": "addItem",
 			"click a#search": "search",
-			"click a#reset-filters": "resetFilters",
+			"click a#reset-filters": "resetFilters"
 		},
 
 		initialize: function() {

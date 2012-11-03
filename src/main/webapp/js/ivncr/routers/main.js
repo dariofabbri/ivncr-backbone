@@ -32,7 +32,7 @@ define([
 			var navbar = new NavbarView();
 			this.show(navbar, "#navbar");
 			
-			var footer = new FooterView();
+			var footer = new FooterView({model: application.loginInfo});
 			this.show(footer, "#footer");
 		}
 	});

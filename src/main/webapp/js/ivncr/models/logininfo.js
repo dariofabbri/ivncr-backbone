@@ -33,6 +33,23 @@ define([
 			});
 
 			return this.get("loggedOn");
+		},
+		
+		doLogout: function() {
+			
+			var that = this;
+			$.ajax({
+				url: "/ivncr/api/security/" + that.get("securityToken"),
+				type: "DELETE",
+				dataType: "json",
+				contentType: "application/json",
+				async: false,
+				success: function(data, textStatus, jqXHR) {
+					that.set("securityToken", null);
+					that.set("loggedOn", false);
+					that.set("username", null);
+				}
+			});
 		}
 	});
 	

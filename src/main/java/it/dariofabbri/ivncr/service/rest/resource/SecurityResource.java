@@ -74,9 +74,11 @@ public class SecurityResource {
 					.build();
 		}
 		
-		// Check if the passed token is associated with a valid session.
-		//
+		
 		try {
+			
+			// Check if the passed token is associated with a valid session.
+			//
 			Session session = SecurityUtils.getSecurityManager().getSession(new DefaultSessionKey(token));
 			if(session == null) {
 				return Response
