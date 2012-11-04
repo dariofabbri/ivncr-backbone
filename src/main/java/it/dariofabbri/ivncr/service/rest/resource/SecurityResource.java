@@ -1,6 +1,7 @@
 package it.dariofabbri.ivncr.service.rest.resource;
 
 
+import it.dariofabbri.ivncr.model.security.User;
 import it.dariofabbri.ivncr.service.rest.dto.SecurityDTO;
 
 import java.util.Date;
@@ -51,6 +52,18 @@ public class SecurityResource {
 		String sessionId = currentUser.getSession(true).getId().toString();
 		logger.info("Session id: " + sessionId);
 
+		// Extract some useful data from current user.
+		//
+		for(Object principal : currentUser.getPrincipals()) {
+			if(principal instanceof User) {
+				
+				User user = (User)principal;
+				dto.setName(user.getFirstName());
+				dto.setSurname(user.getLastName());
+				break;
+			}
+		}
+		
 		dto.setPassword(null);
 		dto.setSecurityToken(sessionId);
 		dto.setLoggedOn(true);

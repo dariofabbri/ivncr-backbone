@@ -1,10 +1,10 @@
-package it.dariofabbri.ivncr.service.local;
+package it.dariofabbri.ivncr.security.shiro;
 
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.junit.Test;
 
-public class SimpleTest {
+public class DigestPasswordTest {
 
 	@Test
 	public void test() {

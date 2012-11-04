@@ -9,7 +9,7 @@ public class SaltedWithIterationAuthenticationInfo implements
 
 	private static final long serialVersionUID = 1L;
 
-	private PrincipalCollection principals;
+	private SimplePrincipalCollection principals;
 	private Object credentials;
 	private Object salt;
 	private int iterations;
@@ -26,17 +26,14 @@ public class SaltedWithIterationAuthenticationInfo implements
 		return credentials;
 	}
 
-	public void setCredentials(Object credentials) {
-		this.credentials = credentials;
-	}
-
 	@Override
 	public PrincipalCollection getPrincipals() {
 		return principals;
 	}
-
-	public void setPrincipals(PrincipalCollection principals) {
-		this.principals = principals;
+	
+	public void addPrincipal(Object principal, String realm) {
+		
+		principals.add(principal, realm);
 	}
 
 	public Object getSalt() {

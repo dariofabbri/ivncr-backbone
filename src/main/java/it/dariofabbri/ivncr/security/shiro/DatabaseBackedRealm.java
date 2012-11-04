@@ -53,11 +53,19 @@ public class DatabaseBackedRealm extends AuthorizingRealm {
 
 		// Create authentication info.
 		//
+		String realm = getName();
 		SaltedWithIterationAuthenticationInfo info = 
-				new SaltedWithIterationAuthenticationInfo(username, digest, getName());
+				new SaltedWithIterationAuthenticationInfo(username, digest, realm);
+		
+		// Set up digest info.
+		//
 		info.setIterations(iterations);
 		info.setSalt(salt);
 
+		// Set up user details as a secondary principal.
+		//
+		info.addPrincipal(user, realm);
+		
 		// Always clean up cached authorization after a login.
 		//
 		clearCachedAuthorizationInfo(info.getPrincipals());
