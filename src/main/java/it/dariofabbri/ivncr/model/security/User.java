@@ -27,9 +27,15 @@ public class User {
 	@Column(name="username")
 	private String username;
 	
-	@Column(name="password")
-	private String password;
+	@Column(name="digest")
+	private String digest;
 	
+	@Column(name="salt")
+	private String salt;
+	
+	@Column(name="iterations")
+	private Integer iterations;
+
 	@Column(name="firstName")
 	private String firstName;
 	
@@ -64,12 +70,28 @@ public class User {
 		this.username = username;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getDigest() {
+		return digest;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setDigest(String digest) {
+		this.digest = digest;
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	public Integer getIterations() {
+		return iterations;
+	}
+
+	public void setIterations(Integer iterations) {
+		this.iterations = iterations;
 	}
 
 	public String getFirstName() {

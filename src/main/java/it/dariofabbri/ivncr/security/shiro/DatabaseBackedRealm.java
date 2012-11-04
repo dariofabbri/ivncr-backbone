@@ -1,4 +1,4 @@
-package it.dariofabbri.ivncr.security.realms;
+package it.dariofabbri.ivncr.security.shiro;
 
 import it.dariofabbri.ivncr.model.security.Permission;
 import it.dariofabbri.ivncr.model.security.Role;
@@ -14,7 +14,6 @@ import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationException;
@@ -45,10 +44,19 @@ public class DatabaseBackedRealm extends AuthorizingRealm {
 		User user = ss.getByUsername(username);
 		if (user == null)
 			throw new UnknownAccountException("No account found for user [" + username + "]");
-		String password = user.getPassword();
+		
+		// Extract digested password informations.
+		//
+		String digest = user.getDigest();
+		String salt = user.getSalt();
+		Integer iterations = user.getIterations();
 
-		SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(username,
-				password.toCharArray(), getName());
+		// Create authentication info.
+		//
+		SaltedWithIterationAuthenticationInfo info = 
+				new SaltedWithIterationAuthenticationInfo(username, digest, getName());
+		info.setIterations(iterations);
+		info.setSalt(salt);
 
 		// Always clean up cached authorization after a login.
 		//
