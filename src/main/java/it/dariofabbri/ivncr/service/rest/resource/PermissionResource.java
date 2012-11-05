@@ -3,12 +3,14 @@ package it.dariofabbri.ivncr.service.rest.resource;
 
 import it.dariofabbri.ivncr.service.rest.dto.PermissionDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.apache.shiro.SecurityUtils;
@@ -42,34 +44,36 @@ public class PermissionResource {
 			.ok()
 			.entity(dto)
 			.build();
-	}	
+	}
 	
 	
 	@GET
 	public Response checkPermissions(
-			List<PermissionDTO> permissions) {
+			@QueryParam("actions") String actions) {
 
 		logger.debug("checkPermissions called!");
 
+		String[] permissions = actions.split(",");
+		
 		Subject currentUser = SecurityUtils.getSubject();
 
-		String[] list = new String[permissions.size()];
-		for(int i = 0; i < permissions.size(); ++i) {
-			PermissionDTO dto = permissions.get(i);
-			list[i] = dto.getAction();
-		}
-		
-		boolean[] result = currentUser.isPermitted(list);
-		if(result.length != permissions.size())
+		boolean[] result = currentUser.isPermitted(permissions);
+		if(result.length != permissions.length)
 			throw new RuntimeException("Unexpected number of results obtained while checking permissions.");
 		
+		List<PermissionDTO> list = new ArrayList<PermissionDTO>();
 		for(int i = 0; i < result.length; ++i) {
-			permissions.get(i).setAllowed(result[i]);
+			
+			PermissionDTO dto = new PermissionDTO();
+			dto.setAction(permissions[i]);
+			dto.setAllowed(result[i]);
+			
+			list.add(dto);
 		}
 
 		return Response
 			.ok()
-			.entity(permissions)
+			.entity(list)
 			.build();
 	}	
 }
