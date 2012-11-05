@@ -19,10 +19,19 @@ define([
 		
 		logout: function() {
 			
-			this.model.destroy({success: function() {
-				
-				Backbone.history.navigate("login", true);
-			}});
+			// Try to destroy the logininfo model. Either case, success or
+			// error, the flow is redirected to login page, which is what the
+			// user requires even if it is not possible, for some reason, to
+			// destroy the session (already expired?)...
+			//
+			this.model.destroy({
+				success: function() {
+					Backbone.history.navigate("login", true);
+				},
+				error: function() {
+					Backbone.history.navigate("login", true);
+				}
+			});
 		}
 	});
 	
