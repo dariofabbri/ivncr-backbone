@@ -72,7 +72,7 @@ public class UserResource {
 	@Path("/{id}")
 	public Response getUser(@PathParam("id") Integer id) {
 
-		logger.debug("getContact called!");
+		logger.debug("getUser called!");
 		
 		Subject currentUser = SecurityUtils.getSubject();
 		if(!currentUser.isPermitted("users:get")) {
@@ -81,6 +81,9 @@ public class UserResource {
 		
 		UserService us = ServiceFactory.createUserService();
 		User user = us.retrieveUserById(id);
+		if(user == null) {
+			return Response.status(Status.NOT_FOUND).build();
+		}
 
 		Mapper mapper = DozerBeanMapperSingletonWrapper.getInstance();
         UserDTO dto = mapper.map(user, UserDTO.class);
@@ -114,7 +117,7 @@ public class UserResource {
 	@Consumes("application/json")
 	public Response createUser(UserDTO user) {
 		
-		logger.debug("createContact called!");
+		logger.debug("createUser called!");
 		
 		Subject currentUser = SecurityUtils.getSubject();
 		if(!currentUser.isPermitted("users:create")) {

@@ -1,12 +1,12 @@
 package it.dariofabbri.ivncr.service.rest.resource;
 
 
-import it.dariofabbri.ivncr.model.contact.Contact;
+import it.dariofabbri.ivncr.model.security.Role;
 import it.dariofabbri.ivncr.service.local.QueryResult;
 import it.dariofabbri.ivncr.service.local.ServiceFactory;
-import it.dariofabbri.ivncr.service.local.contact.ContactService;
-import it.dariofabbri.ivncr.service.rest.dto.ContactDTO;
-import it.dariofabbri.ivncr.service.rest.dto.ContactsDTO;
+import it.dariofabbri.ivncr.service.local.role.RoleService;
+import it.dariofabbri.ivncr.service.rest.dto.RoleDTO;
+import it.dariofabbri.ivncr.service.rest.dto.RolesDTO;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -27,81 +27,79 @@ import org.dozer.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Path("/contacts")
+@Path("/roles")
 @Produces("application/json")
-public class ContactResource {
+public class RoleResource {
 
-	private static final Logger logger = LoggerFactory.getLogger(ContactResource.class);
+	private static final Logger logger = LoggerFactory.getLogger(RoleResource.class);
 	
 	@GET
-	public Response getContacts(
-			@QueryParam("firstName") String firstName,
-			@QueryParam("lastName") String lastName,
-			@QueryParam("phoneNumber") String phoneNumber,
+	public Response getRoles(
+			@QueryParam("rolename") String rolename,
+			@QueryParam("description") String description,
 			@QueryParam("offset") Integer offset,
 			@QueryParam("limit") Integer limit) {
 
-		logger.debug("getContacts called!");
+		logger.debug("getRoles called!");
 		
 		Subject currentUser = SecurityUtils.getSubject();
-		if(!currentUser.isPermitted("contacts:list")) {
+		if(!currentUser.isPermitted("roles:list")) {
 			return Response.status(Status.UNAUTHORIZED).entity("Operation not permitted.").build();
 		}
 		
 		// Execute query.
 		//
-		ContactService cs = ServiceFactory.createContactService();
-		QueryResult<Contact> result = cs.listContacts(
-				firstName, 
-				lastName, 
-				phoneNumber, 
+		RoleService rs = ServiceFactory.createRoleService();
+		QueryResult<Role> result = rs.listRoles(
+				rolename,
+				description, 
 				offset, 
 				limit);
 		
 		// Set up response.
 		//
 		Mapper mapper = DozerBeanMapperSingletonWrapper.getInstance();
-        ContactsDTO dto = mapper.map(result, ContactsDTO.class);
+        RolesDTO dto = mapper.map(result, RolesDTO.class);
 		
 		return Response.ok().entity(dto).build();
 	}
 	
 	@GET
 	@Path("/{id}")
-	public Response getContact(@PathParam("id") Integer id) {
+	public Response getRole(@PathParam("id") Integer id) {
 
-		logger.debug("getContact called!");
+		logger.debug("getRole called!");
 		
 		Subject currentUser = SecurityUtils.getSubject();
-		if(!currentUser.isPermitted("contacts:get")) {
+		if(!currentUser.isPermitted("roles:get")) {
 			return Response.status(Status.UNAUTHORIZED).entity("Operation not permitted.").build();
 		}
 		
-		ContactService cs = ServiceFactory.createContactService();
-		Contact contact = cs.retrieveContactById(id);
-		if(contact == null) {
+		RoleService rs = ServiceFactory.createRoleService();
+		Role role = rs.retrieveRoleById(id);
+		if(role == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 
 		Mapper mapper = DozerBeanMapperSingletonWrapper.getInstance();
-        ContactDTO dto = mapper.map(contact, ContactDTO.class);
+        RoleDTO dto = mapper.map(role, RoleDTO.class);
 
 		return Response.ok().entity(dto).build();
 	}
 	
 	@DELETE
 	@Path("/{id}")
-	public Response deleteContact(@PathParam("id") Integer id) {
+	public Response deleteRole(@PathParam("id") Integer id) {
 		
-		logger.debug("deleteContact called!");
+		logger.debug("deleteRole called!");
 		
 		Subject currentUser = SecurityUtils.getSubject();
-		if(!currentUser.isPermitted("contacts:delete")) {
+		if(!currentUser.isPermitted("roles:delete")) {
 			return Response.status(Status.UNAUTHORIZED).entity("Operation not permitted.").build();
 		}
 		
-		ContactService cs = ServiceFactory.createContactService();
-		boolean result = cs.deleteContactById(id);
+		RoleService rs = ServiceFactory.createRoleService();
+		boolean result = rs.deleteRoleById(id);
 		
 		if(result) {
 			return Response.ok().build();
@@ -113,20 +111,19 @@ public class ContactResource {
 	
 	@POST
 	@Consumes("application/json")
-	public Response createContact(ContactDTO contact) {
+	public Response createRole(RoleDTO role) {
 		
-		logger.debug("createContact called!");
+		logger.debug("createRole called!");
 		
 		Subject currentUser = SecurityUtils.getSubject();
-		if(!currentUser.isPermitted("contacts:create")) {
+		if(!currentUser.isPermitted("roles:create")) {
 			return Response.status(Status.UNAUTHORIZED).entity("Operation not permitted.").build();
 		}
 
-		ContactService cs = ServiceFactory.createContactService();
-		boolean result = cs.createContact(
-				contact.getFirstName(),
-				contact.getLastName(),
-				contact.getPhoneNumber());
+		RoleService rs = ServiceFactory.createRoleService();
+		boolean result = rs.createRole(
+				role.getRolename(),
+				role.getDescription());
 		
 		if(result) {
 			return Response.ok().build();
@@ -139,21 +136,20 @@ public class ContactResource {
 	@PUT
 	@Consumes("application/json")
 	@Path("/{id}")
-	public Response updateContact(@PathParam("id") Integer id, ContactDTO contact) {
+	public Response updateRole(@PathParam("id") Integer id, RoleDTO role) {
 		
-		logger.debug("updateContact called!");
+		logger.debug("updateRole called!");
 		
 		Subject currentUser = SecurityUtils.getSubject();
-		if(!currentUser.isPermitted("contacts:update")) {
+		if(!currentUser.isPermitted("roles:update")) {
 			return Response.status(Status.UNAUTHORIZED).entity("Operation not permitted.").build();
 		}
 
-		ContactService cs = ServiceFactory.createContactService();
-		boolean result = cs.updateContact(
+		RoleService rs = ServiceFactory.createRoleService();
+		boolean result = rs.updateRole(
 				id,
-				contact.getFirstName(),
-				contact.getLastName(),
-				contact.getPhoneNumber());
+				role.getRolename(),
+				role.getDescription());
 		
 		if(result) {
 			return Response.ok().build();
