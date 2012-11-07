@@ -1,12 +1,17 @@
 package it.dariofabbri.ivncr.service.rest.resource;
 
 
+import it.dariofabbri.ivncr.model.security.Role;
 import it.dariofabbri.ivncr.model.security.User;
 import it.dariofabbri.ivncr.service.local.QueryResult;
 import it.dariofabbri.ivncr.service.local.ServiceFactory;
 import it.dariofabbri.ivncr.service.local.user.UserService;
+import it.dariofabbri.ivncr.service.rest.dto.RoleDTO;
 import it.dariofabbri.ivncr.service.rest.dto.UserDTO;
 import it.dariofabbri.ivncr.service.rest.dto.UsersDTO;
+import it.dariofabbri.ivncr.util.MappingUtil;
+
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -165,5 +170,26 @@ public class UserResource {
 		else {
 			return Response.status(Status.NOT_FOUND).build();
 		}
+	}
+
+	
+	@GET
+	@Path("/{id}/roles")
+	public Response getRoles(@PathParam("id") Integer id) {
+
+		logger.debug("getRoles called!");
+		
+		Subject currentUser = SecurityUtils.getSubject();
+		if(!currentUser.isPermitted("users:getroles")) {
+			return Response.status(Status.UNAUTHORIZED).entity("Operation not permitted.").build();
+		}
+		
+		UserService us = ServiceFactory.createUserService();
+		List<Role> roles = us.retrieveRolesByUserId(id);
+
+		MappingUtil<RoleDTO> mu = new MappingUtil<RoleDTO>();
+		List<RoleDTO> dto = mu.map(roles, RoleDTO.class);
+
+		return Response.ok().entity(dto).build();
 	}
 }

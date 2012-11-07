@@ -1,8 +1,11 @@
 package it.dariofabbri.ivncr.service.local.user;
 
+import it.dariofabbri.ivncr.model.security.Role;
 import it.dariofabbri.ivncr.model.security.User;
 import it.dariofabbri.ivncr.service.local.AbstractService;
 import it.dariofabbri.ivncr.service.local.QueryResult;
+
+import java.util.List;
 
 import org.hibernate.Query;
 
@@ -93,5 +96,21 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		session.update(user);
 		
 		return true;
+	}
+		
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Role> retrieveRolesByUserId(Integer id) {
+
+		String hql = 
+				"select distinct rol from Role rol " +
+				"inner join rol.users use " +
+				"where use.id = :id";
+		Query query = session.createQuery(hql);
+		query.setParameter("id", id);
+		List<Role> list = (List<Role>)query.list();
+		logger.debug("Roles found: " + list);
+		
+		return list;
 	}
 }

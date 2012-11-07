@@ -2,16 +2,21 @@ package it.dariofabbri.ivncr.service.rest.resource;
 
 
 import it.dariofabbri.ivncr.model.security.User;
+import it.dariofabbri.ivncr.service.rest.dto.PermissionDTO;
 import it.dariofabbri.ivncr.service.rest.dto.SecurityDTO;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -31,7 +36,7 @@ public class SecurityResource {
 	private static final Logger logger = LoggerFactory.getLogger(SecurityResource.class);
 	
 	@POST
-	@Path("/")
+	@Path("/sessions")
 	@Consumes("application/json")
 	public Response createSession(SecurityDTO dto) {
 
@@ -77,7 +82,7 @@ public class SecurityResource {
 	
 	
 	@DELETE
-	@Path("/{token}")
+	@Path("/sessions/{token}")
 	public Response deleteSession(
 			@PathParam("token") String token) {
 
@@ -116,5 +121,60 @@ public class SecurityResource {
 					.entity("Session not found using provided token.")
 					.build();		
 		}
+	}
+	
+	
+	@GET
+	@Path("/permissions/{action}")
+	public Response checkPermission(
+			@PathParam("action") String action) {
+
+		logger.debug("checkPermission called!");
+
+		Subject currentUser = SecurityUtils.getSubject();
+		
+		boolean allowed = currentUser.isPermitted(action);
+
+		PermissionDTO dto = new PermissionDTO();
+		dto.setAction(action);
+		dto.setAllowed(allowed);
+		
+		return Response
+			.ok()
+			.entity(dto)
+			.build();
+	}
+	
+	
+	@GET
+	@Path("/permissions")
+	public Response checkPermissions(
+			@QueryParam("actions") String actions) {
+
+		logger.debug("checkPermissions called!");
+
+		String[] permissions = actions.split(",");
+		
+		Subject currentUser = SecurityUtils.getSubject();
+
+		boolean[] result = currentUser.isPermitted(permissions);
+		if(result.length != permissions.length)
+			throw new RuntimeException("Unexpected number of results obtained while checking permissions.");
+		
+		List<PermissionDTO> list = new ArrayList<PermissionDTO>();
+		for(int i = 0; i < result.length; ++i) {
+			
+			PermissionDTO dto = new PermissionDTO();
+			dto.setAction(permissions[i]);
+			dto.setAllowed(result[i]);
+			
+			list.add(dto);
+		}
+
+		return Response
+			.ok()
+			.entity(list)
+			.build();
 	}	
+
 }

@@ -1,5 +1,8 @@
 package it.dariofabbri.ivncr.service.local.user;
 
+import java.util.List;
+
+import it.dariofabbri.ivncr.model.security.Role;
 import it.dariofabbri.ivncr.model.security.User;
 import it.dariofabbri.ivncr.service.local.QueryResult;
 import it.dariofabbri.ivncr.service.local.Service;
@@ -21,4 +24,6 @@ public interface UserService extends Service {
 	boolean createUser(String username, String firstName, String lastName, String description);
 
 	boolean updateUser(Integer id, String username, String firstName, String lastName, String description);
+
+	List<Role> retrieveRolesByUserId(Integer id);
 }

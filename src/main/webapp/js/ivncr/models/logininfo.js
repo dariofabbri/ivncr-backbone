@@ -16,7 +16,7 @@ define([
 			permissions: null
 		},
 
-		urlRoot: "/ivncr/api/security",
+		urlRoot: "/ivncr/api/security/sessions",
 		
 		idAttribute: "securityToken"
 	});
