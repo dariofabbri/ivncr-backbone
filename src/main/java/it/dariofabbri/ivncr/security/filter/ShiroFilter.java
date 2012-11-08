@@ -29,7 +29,9 @@ public class ShiroFilter implements Filter {
 
 	private static final Logger logger = LoggerFactory.getLogger(SecurityResource.class);
 
-	protected static final String SECURITY_TOKEN = "X-Security-Token";
+	protected static final String SECURITY_TOKEN_HEADER = "X-Security-Token";
+	protected static final String SECURITY_TOKEN_PARAMETER = "x-security-token";
+	
 	private Pattern excludePattern = null;
 	
 	@Override
@@ -67,13 +69,21 @@ public class ShiroFilter implements Filter {
 
 		// Extract security token from custom header.
 		//
-		String token = hsr.getHeader(SECURITY_TOKEN);
+		String token = hsr.getHeader(SECURITY_TOKEN_HEADER);
 		logger.debug("Passed security token: " + token);
 
+		// If not found in the header, look for a query argument (workaround
+		// for situations where the header is not viable, i.e. when downloading
+		// a PDF report.
+		//
+		if(token == null) {
+			token = hsr.getParameter(SECURITY_TOKEN_PARAMETER);
+		}
+		
 		// SecurityResource token must be present.
 		//
 		if(token == null) {
-			logger.info("No token found in request header.");
+			logger.info("No token found in request headers nor in passed parameters.");
 			raiseSecurityError(response, "Null token detected");
 			return;
 		}
