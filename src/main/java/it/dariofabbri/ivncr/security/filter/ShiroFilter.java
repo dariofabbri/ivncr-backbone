@@ -70,20 +70,12 @@ public class ShiroFilter implements Filter {
 		// Extract security token from custom header.
 		//
 		String token = hsr.getHeader(SECURITY_TOKEN_HEADER);
-		logger.debug("Passed security token: " + token);
-
-		// If not found in the header, look for a query argument (workaround
-		// for situations where the header is not viable, i.e. when downloading
-		// a PDF report.
-		//
-		if(token == null) {
-			token = hsr.getParameter(SECURITY_TOKEN_PARAMETER);
-		}
+		logger.debug("Security token found in header: " + token);
 		
 		// SecurityResource token must be present.
 		//
 		if(token == null) {
-			logger.info("No token found in request headers nor in passed parameters.");
+			logger.info("No token found in request headers.");
 			raiseSecurityError(response, "Null token detected");
 			return;
 		}

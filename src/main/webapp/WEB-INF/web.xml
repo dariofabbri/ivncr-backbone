@@ -23,6 +23,17 @@
 		<url-pattern>/api/*</url-pattern>
 	</servlet-mapping>
 
+
+	<filter>
+		<filter-name>SecurityHeaderFilter</filter-name>
+		<filter-class>it.dariofabbri.ivncr.security.filter.SecurityHeaderFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>SecurityHeaderFilter</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping>
+
 	<filter>
 		<filter-name>ShiroFilter</filter-name>
 		<filter-class>it.dariofabbri.ivncr.security.filter.ShiroFilter</filter-class>
