@@ -30,7 +30,6 @@ public class ShiroFilter implements Filter {
 	private static final Logger logger = LoggerFactory.getLogger(SecurityResource.class);
 
 	protected static final String SECURITY_TOKEN_HEADER = "X-Security-Token";
-	protected static final String SECURITY_TOKEN_PARAMETER = "x-security-token";
 	
 	private Pattern excludePattern = null;
 	

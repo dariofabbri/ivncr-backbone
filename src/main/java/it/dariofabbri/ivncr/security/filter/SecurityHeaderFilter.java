@@ -14,16 +14,23 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SecurityHeaderFilter implements Filter {
 
     static class FilteredRequest extends HttpServletRequestWrapper {
 
+    	private static final Logger logger = LoggerFactory.getLogger(FilteredRequest.class);
+    	
     	protected static final String SECURITY_TOKEN_HEADER = "X-Security-Token";
     	protected static final String SECURITY_TOKEN_PARAMETER = "x-security-token";
 
+    	
     	public FilteredRequest(ServletRequest request) {
     		super((HttpServletRequest)request);
     	}
+    	
     	
     	@Override
     	public String getHeader(String name) {
@@ -38,7 +45,10 @@ public class SecurityHeaderFilter implements Filter {
     			// for situations where the header is not viable, i.e. when downloading
     			// a PDF report.
     			//
+   				logger.debug("Security token not found in headers.");
    				token = super.getParameter(SECURITY_TOKEN_PARAMETER);
+   				logger.debug("Security token extracted from query arguments: " + token);
+   				
    				return token;
     		}
     		
@@ -48,27 +58,27 @@ public class SecurityHeaderFilter implements Filter {
     	@Override
     	public String getParameter(String name) {
     	
-    		System.out.println(">>>>>>>>>>>>>getParameter");
-    		
     		if(super.getHeader(SECURITY_TOKEN_HEADER) != null)
     			return super.getParameter(name);
     		
-    		if(name.equals(SECURITY_TOKEN_PARAMETER))
+    		if(name.equals(SECURITY_TOKEN_PARAMETER)) {
+    			logger.debug("Security token was passed on query string, it has been removed from parameters.");
     			return null;
+    		}
     		else
     			return super.getParameter(name);
     	}
     	
     	@Override
     	public String[] getParameterValues(String name) {
-    		
-    		System.out.println(">>>>>>>>>>>>>getParameterValues");
 
     		if(super.getHeader(SECURITY_TOKEN_HEADER) != null)
     			return super.getParameterValues(name);
     		
-    		if(name.equals(SECURITY_TOKEN_PARAMETER))
+    		if(name.equals(SECURITY_TOKEN_PARAMETER)) {
+    			logger.debug("Security token was passed on query string, it has been removed from parameters.");
     			return null;
+    		}
     		else
     			return super.getParameterValues(name);
     	}
@@ -77,8 +87,6 @@ public class SecurityHeaderFilter implements Filter {
 		@Override
     	public Map getParameterMap() {
     		
-    		System.out.println(">>>>>>>>>>>>>getParameterMap");
-    		
     		if(super.getHeader(SECURITY_TOKEN_HEADER) != null)
     			return super.getParameterMap();
     		
@@ -86,8 +94,10 @@ public class SecurityHeaderFilter implements Filter {
     		Map copy = new HashMap();
     		for(Object key : map.keySet()) {
     			
-    			if(key.equals(SECURITY_TOKEN_PARAMETER))
+    			if(key.equals(SECURITY_TOKEN_PARAMETER)) {
+    				logger.debug("Security token was passed on query string, it has been removed from parameters.");
     				continue;
+    			}
     			
     			copy.put(key, map.get(key));
     		}
@@ -103,8 +113,6 @@ public class SecurityHeaderFilter implements Filter {
     	
     	@Override
     	public String getQueryString() {
-    		
-    		System.out.println(">>>>>>>>>>>>>getQueryString");
 
     		String qs = super.getQueryString();
     		if(qs == null)
@@ -120,8 +128,10 @@ public class SecurityHeaderFilter implements Filter {
     		
     		for(String part : parts) {
     			
-    			if(part.startsWith(SECURITY_TOKEN_PARAMETER))
+    			if(part.startsWith(SECURITY_TOKEN_PARAMETER)) {
+    				logger.debug("Security token was passed on query string, it has been removed from parameters.");
     				continue;
+    			}
     			
     			if(first) {
     				first = false;
@@ -140,6 +150,7 @@ public class SecurityHeaderFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response,
     		FilterChain chain) throws IOException, ServletException {
+    	
     	chain.doFilter(new FilteredRequest(request), response);
     }
 
