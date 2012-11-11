@@ -1,12 +1,19 @@
 package it.dariofabbri.ivncr.service.rest.resource;
 
 
+import it.dariofabbri.ivncr.model.security.Permission;
 import it.dariofabbri.ivncr.model.security.Role;
+import it.dariofabbri.ivncr.service.local.AlreadyPresentException;
+import it.dariofabbri.ivncr.service.local.NotFoundException;
 import it.dariofabbri.ivncr.service.local.QueryResult;
 import it.dariofabbri.ivncr.service.local.ServiceFactory;
 import it.dariofabbri.ivncr.service.local.role.RoleService;
+import it.dariofabbri.ivncr.service.rest.dto.PermissionDTO;
 import it.dariofabbri.ivncr.service.rest.dto.RoleDTO;
 import it.dariofabbri.ivncr.service.rest.dto.RolesDTO;
+import it.dariofabbri.ivncr.util.MappingUtil;
+
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -99,14 +106,14 @@ public class RoleResource {
 		}
 		
 		RoleService rs = ServiceFactory.createRoleService();
-		boolean result = rs.deleteRoleById(id);
+		try {
+			rs.deleteRoleById(id);
+		}
+		catch(NotFoundException nfe) {
+			return Response.status(Status.NOT_FOUND).entity(nfe.getMessage()).build();			
+		}
 		
-		if(result) {
-			return Response.ok().build();
-		}
-		else {
-			return Response.status(Status.NOT_FOUND).build();
-		}
+		return Response.ok().build();
 	}
 	
 	@POST
@@ -121,18 +128,19 @@ public class RoleResource {
 		}
 
 		RoleService rs = ServiceFactory.createRoleService();
-		boolean result = rs.createRole(
+		Role entity = rs.createRole(
 				role.getRolename(),
 				role.getDescription());
 		
-		if(result) {
-			return Response.ok().build();
-		}
-		else {
+		if(entity == null) {
 			return Response.status(Status.CONFLICT).build();
 		}
+		
+		Mapper mapper = DozerBeanMapperSingletonWrapper.getInstance();
+        RoleDTO dto = mapper.map(entity, RoleDTO.class);
+		return Response.status(Status.CREATED).entity(dto).build();
 	}
-	
+
 	@PUT
 	@Consumes("application/json")
 	@Path("/{id}")
@@ -146,16 +154,102 @@ public class RoleResource {
 		}
 
 		RoleService rs = ServiceFactory.createRoleService();
-		boolean result = rs.updateRole(
+		try {
+			rs.updateRole(
 				id,
 				role.getRolename(),
 				role.getDescription());
+			
+		} catch(NotFoundException nfe) {
+			return Response.status(Status.NOT_FOUND).entity(nfe.getMessage()).build();
+		}
 		
-		if(result) {
-			return Response.ok().build();
+		return Response.ok().build();
+	}
+
+	
+	@GET
+	@Path("/{id}/permissions")
+	public Response getPermissions(@PathParam("id") Integer id) {
+
+		logger.debug("getPermissions called!");
+		
+		Subject currentUser = SecurityUtils.getSubject();
+		if(!currentUser.isPermitted("roles:getpermissions")) {
+			return Response.status(Status.UNAUTHORIZED).entity("Operation not permitted.").build();
 		}
-		else {
-			return Response.status(Status.NOT_FOUND).build();
+		
+		RoleService rs = ServiceFactory.createRoleService();
+		List<Permission> permissions;
+		try {
+			permissions = rs.retrieveRolePermissions(id);
+		} catch (NotFoundException nfe) {
+			return Response.status(Status.NOT_FOUND).entity(nfe.getMessage()).build();
 		}
+
+		MappingUtil<PermissionDTO> mu = new MappingUtil<PermissionDTO>();
+		List<PermissionDTO> dto = mu.map(permissions, PermissionDTO.class);
+
+		return Response.ok().entity(dto).build();
+	}
+	
+	
+	@POST
+	@Path("/{id}/permissions")
+	@Consumes("application/json")
+	public Response addPermission(@PathParam("id") Integer id, PermissionDTO permission) {
+
+		logger.debug("addPermission called!");
+		
+		Subject currentUser = SecurityUtils.getSubject();
+		if(!currentUser.isPermitted("roles:addpermission")) {
+			return Response.status(Status.UNAUTHORIZED).entity("Operation not permitted.").build();
+		}
+		
+		// Check if DTO contains permission id.
+		// The rest of the DTO is ignored and not checked for coherence.
+		//
+		if(permission.getId() == null) {
+			return Response.status(Status.BAD_REQUEST).entity("Missing permission id in request body.").build();			
+		}
+		
+		RoleService rs = ServiceFactory.createRoleService();
+		Permission entity = null;
+		try {
+			entity = rs.addPermissionToRole(id, permission.getId());
+		} catch(NotFoundException nfe) {
+			return Response.status(Status.NOT_FOUND).entity(nfe.getMessage()).build();
+		} catch(AlreadyPresentException ape) {
+			return Response.status(Status.CONFLICT).entity(ape.getMessage()).build();
+		}
+				
+		Mapper mapper = DozerBeanMapperSingletonWrapper.getInstance();
+        PermissionDTO dto = mapper.map(entity, PermissionDTO.class);
+		return Response.status(Status.CREATED).entity(dto).build();
+	}
+	
+	
+	@DELETE
+	@Path("/{roleid}/permissions/{permissionid}")
+	public Response deletePermission(
+			@PathParam("roleid") Integer roleId,
+			@PathParam("permissionid") Integer permissionId) {
+
+		logger.debug("deletePermission called!");
+		
+		Subject currentUser = SecurityUtils.getSubject();
+		if(!currentUser.isPermitted("roles:deletepermission")) {
+			return Response.status(Status.UNAUTHORIZED).entity("Operation not permitted.").build();
+		}
+		
+		RoleService rs = ServiceFactory.createRoleService();
+		try {
+			rs.deletePermissionFromRole(roleId, permissionId);
+		}
+		catch(NotFoundException nfe) {
+			return Response.status(Status.NOT_FOUND).entity(nfe.getMessage()).build();			
+		}
+
+		return Response.ok().build();
 	}
 }

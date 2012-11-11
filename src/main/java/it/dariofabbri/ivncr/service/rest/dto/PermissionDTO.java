@@ -1,24 +1,23 @@
 package it.dariofabbri.ivncr.service.rest.dto;
 
-
 public class PermissionDTO {
 
-	private String action;
-	private Boolean allowed;
+	private Integer id;
+	private String permissionString;
 
-	public String getAction() {
-		return action;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setAction(String action) {
-		this.action = action;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public Boolean getAllowed() {
-		return allowed;
+	public String getPermissionString() {
+		return permissionString;
 	}
 
-	public void setAllowed(Boolean allowed) {
-		this.allowed = allowed;
+	public void setPermissionString(String permissionString) {
+		this.permissionString = permissionString;
 	}
 }

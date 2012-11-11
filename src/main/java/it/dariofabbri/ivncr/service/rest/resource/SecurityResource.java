@@ -2,7 +2,7 @@ package it.dariofabbri.ivncr.service.rest.resource;
 
 
 import it.dariofabbri.ivncr.model.security.User;
-import it.dariofabbri.ivncr.service.rest.dto.PermissionDTO;
+import it.dariofabbri.ivncr.service.rest.dto.ActionGrantDTO;
 import it.dariofabbri.ivncr.service.rest.dto.SecurityDTO;
 
 import java.util.ArrayList;
@@ -135,7 +135,7 @@ public class SecurityResource {
 		
 		boolean allowed = currentUser.isPermitted(action);
 
-		PermissionDTO dto = new PermissionDTO();
+		ActionGrantDTO dto = new ActionGrantDTO();
 		dto.setAction(action);
 		dto.setAllowed(allowed);
 		
@@ -161,10 +161,10 @@ public class SecurityResource {
 		if(result.length != permissions.length)
 			throw new RuntimeException("Unexpected number of results obtained while checking permissions.");
 		
-		List<PermissionDTO> list = new ArrayList<PermissionDTO>();
+		List<ActionGrantDTO> list = new ArrayList<ActionGrantDTO>();
 		for(int i = 0; i < result.length; ++i) {
 			
-			PermissionDTO dto = new PermissionDTO();
+			ActionGrantDTO dto = new ActionGrantDTO();
 			dto.setAction(permissions[i]);
 			dto.setAllowed(result[i]);
 			

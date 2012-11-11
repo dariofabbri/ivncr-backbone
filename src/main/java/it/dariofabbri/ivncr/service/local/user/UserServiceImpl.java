@@ -37,12 +37,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
 	@Override
 	public User retrieveUserById(Integer id) {
 
-		String hql = 
-				"from User use " +
-				"where use.id = :id";
-		Query query = session.createQuery(hql);
-		query.setParameter("id", id);
-		User user = (User)query.uniqueResult();
+		User user = (User)session.get(User.class, id);
 		logger.debug("User found: " + user);
 		
 		return user;
@@ -101,7 +96,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
 			String firstName, 
 			String lastName, 
 			String description) {
-		
+
 		User user = retrieveUserById(id);
 		if(user == null) {
 			String message = String.format("It has not been possible to retrieve specified user: %d", id);
