@@ -1,0 +1,18 @@
+<form class="well form-horizontal">
+	<legend>Pannello di ricerca</legend>
+	<div class="control-group">
+		<label class="control-label" for="permissionstring">Stringa di permesso: </label>
+		<div class="controls">
+			<input 
+				id="permissionstring" 
+				type="text" 
+				placeholder="Scrivi parte della stringa per filtrare la lista"
+				value="<%=collection.queryArguments.permissionString%>" />
+			<span class="help-inline"></span>
+		</div>
+	</div>
+	<div class="form-actions">
+		<a id="cancel" class="btn">Annulla</a>
+		<a id="search" class="btn btn-primary">Cerca</a>
+	</div>
+</form>

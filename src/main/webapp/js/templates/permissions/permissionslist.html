@@ -1,0 +1,36 @@
+<h3>Lista dei permessi</h3>	
+<table class="table table-striped table-bordered table-condensed">
+	<thead>
+		<tr>
+			<td colspan="2" class="btn-column">
+			<%
+				if(collection.hasFilters()) {
+			%>
+				<a id="reset-filters" 
+					class="btn" 
+					rel="tooltip" 
+					title="Sono stati applicati dei filtri a questa lista. Premi qui per annullare tutti i filtri.">
+					<i class="icon-off"/>
+					Annulla filtri
+				</a>
+			<%
+				}
+			%>
+				<a id="search" class="btn">
+					<i class="icon-search"/>
+					Applica filtri
+				</a>
+				<a id="add" class="btn btn-primary">
+					<i class="icon-plus icon-white"/>
+					Aggiungi nuovo permesso
+				</a>
+			</td>
+		</tr>
+		<tr>
+			<th class="span12">Stringa di permesso</th>
+			<th class="btn-column"></th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>

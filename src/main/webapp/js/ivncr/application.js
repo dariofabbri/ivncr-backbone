@@ -35,6 +35,8 @@ require([
 	"ivncr/routers/main",
 	"ivncr/routers/contacts",
 	"ivncr/routers/pagingcontacts",
+	"ivncr/routers/permissions",
+	"ivncr/routers/roles",
 	"ivncr/models/logininfo",
 	"ivncr/views/common/modaldialog",
 	"bootstrap"], 
@@ -46,6 +48,8 @@ require([
 			MainRouter, 
 			ContactsRouter,
 			PagingContactsRouter,
+			PermissionsRouter,
+			RolesRouter,
 			LoginInfo,
 			ModalDialogView) {
 	
@@ -201,6 +205,8 @@ require([
 		application.routers.push(new MainRouter());
 		application.routers.push(new ContactsRouter());
 		application.routers.push(new PagingContactsRouter());
+		application.routers.push(new RolesRouter());
+		application.routers.push(new PermissionsRouter());
 		
 		application.buildNewLoginInfo = function() {
 

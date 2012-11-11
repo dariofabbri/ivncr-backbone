@@ -2,7 +2,7 @@ define([
 	"underscore", 
 	"backbone",
 	"jquery",
-	"text!templates/pagingcontacts/pagingcontactslistitem.html"], 
+	"text!templates/roles/roleslistitem.html"], 
 	function(_, Backbone, $, itemTemplate) {
 	
 	var view = Backbone.View.extend({
@@ -24,7 +24,7 @@ define([
 
 			application.modalDialog.show({
 				title: "Attenzione",
-				message: "Confermi la cancellazione del contatto selezionato?",
+				message: "Confermi la cancellazione del ruolo selezionato?",
 				okCaption: "Sì",
 				okCallback: this.doRemoveItem,
 				showOk: true,
@@ -36,7 +36,7 @@ define([
 		},
 		
 		editItem: function() {
-			Backbone.history.navigate("PagingContactsEdit/" + this.model.id, true);
+			Backbone.history.navigate("RolesEdit/" + this.model.id, true);
 		},
 		
 		cancelRemoveItem: function() {
