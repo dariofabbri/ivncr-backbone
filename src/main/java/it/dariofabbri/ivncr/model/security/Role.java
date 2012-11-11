@@ -30,7 +30,7 @@ public class Role {
 	@Column(name="description")
 	private String description;
 
-	@OneToMany(orphanRemoval=true)
+	@OneToMany
 	@JoinTable(
 			name="sec_role_permission",
 			joinColumns = { @JoinColumn(name="roleid", referencedColumnName="id")},
@@ -38,7 +38,7 @@ public class Role {
 	)
 	private Set<Permission> permissions;
 
-	@OneToMany(orphanRemoval=true)
+	@OneToMany
 	@JoinTable(
 			name="sec_user_role",
 			joinColumns = { @JoinColumn(name="roleid", referencedColumnName="id")},

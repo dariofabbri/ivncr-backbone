@@ -28,7 +28,7 @@ public class Permission {
 	private String permissionString;
 
 
-	@OneToMany(orphanRemoval=true)
+	@OneToMany
 	@JoinTable(
 			name="sec_role_permission",
 			joinColumns = { @JoinColumn(name="permissionid", referencedColumnName="id")},

@@ -18,12 +18,17 @@ public interface UserService extends Service {
 			Integer limit);
 
 	User retrieveUserById(Integer id);
+	User retrieveUserByUsername(String username);
 
-	boolean deleteUserById(Integer id);
+	void deleteUserById(Integer id);
 
-	boolean createUser(String username, String firstName, String lastName, String description);
+	User createUser(String username, String firstName, String lastName, String description);
 
-	boolean updateUser(Integer id, String username, String firstName, String lastName, String description);
+	User updateUser(Integer id, String username, String firstName, String lastName, String description);
 
-	List<Role> retrieveRolesByUserId(Integer id);
+	List<Role> retrieveUserRoles(Integer id);
+	
+	Role addRoleToUser(Integer userId, Integer roleId);
+	
+	void deleteRoleFromUser(Integer userId, Integer roleId);
 }

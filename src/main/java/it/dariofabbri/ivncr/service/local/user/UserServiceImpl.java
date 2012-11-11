@@ -3,6 +3,8 @@ package it.dariofabbri.ivncr.service.local.user;
 import it.dariofabbri.ivncr.model.security.Role;
 import it.dariofabbri.ivncr.model.security.User;
 import it.dariofabbri.ivncr.service.local.AbstractService;
+import it.dariofabbri.ivncr.service.local.AlreadyPresentException;
+import it.dariofabbri.ivncr.service.local.NotFoundException;
 import it.dariofabbri.ivncr.service.local.QueryResult;
 
 import java.util.List;
@@ -47,18 +49,34 @@ public class UserServiceImpl extends AbstractService implements UserService {
 	}
 
 	@Override
-	public boolean deleteUserById(Integer id) {
+	public User retrieveUserByUsername(String username) {
+
+		String hql = 
+				"from User use " +
+				"where use.username = :username";
+		Query query = session.createQuery(hql);
+		query.setParameter("username", username);
+		User user = (User)query.uniqueResult();
+		logger.debug("User found: " + user);
 		
-		User user = retrieveUserById(id);
-		if(user == null)
-			return false;
-		
-		session.delete(user);
-		return true;
+		return user;
 	}
 
 	@Override
-	public boolean createUser(
+	public void deleteUserById(Integer id) {
+		
+		User user = retrieveUserById(id);
+		if(user == null) {
+			String message = String.format("It has not been possible to retrieve specified user: %d", id);
+			logger.info(message);
+			throw new NotFoundException(message);
+		}
+		
+		session.delete(user);
+	}
+
+	@Override
+	public User createUser(
 			String username, 
 			String firstName, 
 			String lastName, 
@@ -73,11 +91,11 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		
 		session.save(user);
 		
-		return true;
+		return user;
 	}
 
 	@Override
-	public boolean updateUser(
+	public User updateUser(
 			Integer id, 
 			String username,
 			String firstName, 
@@ -85,8 +103,11 @@ public class UserServiceImpl extends AbstractService implements UserService {
 			String description) {
 		
 		User user = retrieveUserById(id);
-		if(user == null)
-			return false;
+		if(user == null) {
+			String message = String.format("It has not been possible to retrieve specified user: %d", id);
+			logger.info(message);
+			throw new NotFoundException(message);
+		}
 		
 		user.setUsername(username);
 		user.setFirstName(firstName);
@@ -95,12 +116,19 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		
 		session.update(user);
 		
-		return true;
+		return user;
 	}
-		
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Role> retrieveRolesByUserId(Integer id) {
+	public List<Role> retrieveUserRoles(Integer id) {
+
+		User user = (User)session.get(User.class, id);
+		if(user == null) {
+			String message = String.format("It has not been possible to retrieve specified user: %d", id);
+			logger.info(message);
+			throw new NotFoundException(message);
+		}
 
 		String hql = 
 				"select distinct rol from Role rol " +
@@ -112,5 +140,63 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		logger.debug("Roles found: " + list);
 		
 		return list;
+	}
+	
+	@Override
+	public Role addRoleToUser(Integer userId, Integer roleId) {
+
+		User user = (User)session.get(User.class, userId);
+		if(user == null) {
+			String message = String.format("It has not been possible to retrieve specified user: %d", userId);
+			logger.info(message);
+			throw new NotFoundException(message);
+		}
+		
+		Role role = (Role)session.get(Role.class, roleId);
+		if(role == null) {
+			String message = String.format("It has not been possible to retrieve specified role: %d", roleId);
+			logger.info(message);
+			throw new NotFoundException(message);
+		}
+		
+		if(user.getRoles().contains(role)) {
+			String message = String.format("Specified role %d already associated to specified user %d.", roleId, userId);
+			logger.info(message);
+			throw new AlreadyPresentException(message);
+		}
+		
+		user.getRoles().add(role);
+		session.update(user);
+		
+		return role;
+	}
+	
+	@Override
+	public void deleteRoleFromUser(Integer userId, Integer roleId) {
+
+		User user = (User)session.get(User.class, userId);
+		if(user == null) {
+			String message = String.format("It has not been possible to retrieve specified user: %d", userId);
+			logger.info(message);
+			throw new NotFoundException(message);
+		}
+		
+		Role foundRole = null;
+		for(Role role : user.getRoles()) {
+			
+			if(role.getId().equals(roleId)) {
+				foundRole = role;
+				break;
+			}
+		}
+		
+		if(foundRole == null) {
+			String message = String.format("It has not been possible to find role %d associated to user %d.", roleId, userId);
+			logger.info(message);
+			throw new NotFoundException(message);
+		}
+		
+		user.getRoles().remove(foundRole);
+		session.update(user);
 	}
 }

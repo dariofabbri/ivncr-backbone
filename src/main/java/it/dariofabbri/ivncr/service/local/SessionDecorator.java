@@ -3,6 +3,7 @@ package it.dariofabbri.ivncr.service.local;
 import it.dariofabbri.ivncr.util.HibernateUtil;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
@@ -64,6 +65,11 @@ public class SessionDecorator<T extends Service> implements InvocationHandler  {
 			}
 			catch(Exception e1) {
 				logger.error("Exception caught while trying to rollback transaction.", e1);
+			}
+			
+			if(e instanceof InvocationTargetException) {
+				InvocationTargetException ite = (InvocationTargetException)e;
+				throw ite.getTargetException();
 			}
 			
 			throw new RuntimeException("Exception caught while running service method.", e);

@@ -3,6 +3,8 @@ package it.dariofabbri.ivncr.service.rest.resource;
 
 import it.dariofabbri.ivncr.model.security.Role;
 import it.dariofabbri.ivncr.model.security.User;
+import it.dariofabbri.ivncr.service.local.AlreadyPresentException;
+import it.dariofabbri.ivncr.service.local.NotFoundException;
 import it.dariofabbri.ivncr.service.local.QueryResult;
 import it.dariofabbri.ivncr.service.local.ServiceFactory;
 import it.dariofabbri.ivncr.service.local.user.UserService;
@@ -108,14 +110,14 @@ public class UserResource {
 		}
 		
 		UserService us = ServiceFactory.createUserService();
-		boolean result = us.deleteUserById(id);
+		try {
+			us.deleteUserById(id);
+		}
+		catch(NotFoundException nfe) {
+			return Response.status(Status.NOT_FOUND).entity(nfe.getMessage()).build();			
+		}
 		
-		if(result) {
-			return Response.ok().build();
-		}
-		else {
-			return Response.status(Status.NOT_FOUND).build();
-		}
+		return Response.ok().build();
 	}
 	
 	@POST
@@ -130,20 +132,21 @@ public class UserResource {
 		}
 
 		UserService us = ServiceFactory.createUserService();
-		boolean result = us.createUser(
+		User entity = us.createUser(
 				user.getUsername(),
 				user.getFirstName(),
 				user.getLastName(),
 				user.getDescription());
 		
-		if(result) {
-			return Response.ok().build();
-		}
-		else {
+		if(entity == null) {
 			return Response.status(Status.CONFLICT).build();
 		}
+		
+		Mapper mapper = DozerBeanMapperSingletonWrapper.getInstance();
+        UserDTO dto = mapper.map(entity, UserDTO.class);
+		return Response.status(Status.CREATED).entity(dto).build();
 	}
-	
+
 	@PUT
 	@Consumes("application/json")
 	@Path("/{id}")
@@ -157,19 +160,19 @@ public class UserResource {
 		}
 
 		UserService us = ServiceFactory.createUserService();
-		boolean result = us.updateUser(
+		try {
+			us.updateUser(
 				id,
 				user.getUsername(),
 				user.getFirstName(),
 				user.getLastName(),
 				user.getDescription());
+			
+		} catch(NotFoundException nfe) {
+			return Response.status(Status.NOT_FOUND).entity(nfe.getMessage()).build();
+		}
 		
-		if(result) {
-			return Response.ok().build();
-		}
-		else {
-			return Response.status(Status.NOT_FOUND).build();
-		}
+		return Response.ok().build();
 	}
 
 	
@@ -185,11 +188,76 @@ public class UserResource {
 		}
 		
 		UserService us = ServiceFactory.createUserService();
-		List<Role> roles = us.retrieveRolesByUserId(id);
+		List<Role> roles;
+		try {
+			roles = us.retrieveUserRoles(id);
+		} catch (NotFoundException nfe) {
+			return Response.status(Status.NOT_FOUND).entity(nfe.getMessage()).build();
+		}
 
 		MappingUtil<RoleDTO> mu = new MappingUtil<RoleDTO>();
 		List<RoleDTO> dto = mu.map(roles, RoleDTO.class);
 
 		return Response.ok().entity(dto).build();
+	}
+	
+	
+	@POST
+	@Path("/{id}/roles")
+	@Consumes("application/json")
+	public Response addRole(@PathParam("id") Integer id, RoleDTO role) {
+
+		logger.debug("addRole called!");
+		
+		Subject currentUser = SecurityUtils.getSubject();
+		if(!currentUser.isPermitted("users:addrole")) {
+			return Response.status(Status.UNAUTHORIZED).entity("Operation not permitted.").build();
+		}
+		
+		// Check if DTO contains role id.
+		// The rest of the DTO is ignored and not checked for coherence.
+		//
+		if(role.getId() == null) {
+			return Response.status(Status.BAD_REQUEST).entity("Missing role id in request body.").build();			
+		}
+		
+		UserService us = ServiceFactory.createUserService();
+		Role entity = null;
+		try {
+			entity = us.addRoleToUser(id, role.getId());
+		} catch(NotFoundException nfe) {
+			return Response.status(Status.NOT_FOUND).entity(nfe.getMessage()).build();
+		} catch(AlreadyPresentException ape) {
+			return Response.status(Status.CONFLICT).entity(ape.getMessage()).build();
+		}
+				
+		Mapper mapper = DozerBeanMapperSingletonWrapper.getInstance();
+        RoleDTO dto = mapper.map(entity, RoleDTO.class);
+		return Response.status(Status.CREATED).entity(dto).build();
+	}
+	
+	
+	@DELETE
+	@Path("/{userid}/roles/{roleid}")
+	public Response deleteRole(
+			@PathParam("userid") Integer userId, 
+			@PathParam("roleid") Integer roleId) {
+
+		logger.debug("deleteRole called!");
+		
+		Subject currentUser = SecurityUtils.getSubject();
+		if(!currentUser.isPermitted("users:deleterole")) {
+			return Response.status(Status.UNAUTHORIZED).entity("Operation not permitted.").build();
+		}
+		
+		UserService us = ServiceFactory.createUserService();
+		try {
+			us.deleteRoleFromUser(userId, roleId);
+		}
+		catch(NotFoundException nfe) {
+			return Response.status(Status.NOT_FOUND).entity(nfe.getMessage()).build();			
+		}
+
+		return Response.ok().build();
 	}
 }
