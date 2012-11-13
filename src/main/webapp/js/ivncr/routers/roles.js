@@ -50,8 +50,7 @@ define([
 		
 		edit: function(id) {
 			
-			var model = new Role({id: id});
-			model.fetch();
+			var model = this.collection.get(id);
 			var view = new RolesEditView({model: model});
 			
 			this.show(view, "#container");

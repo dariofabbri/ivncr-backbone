@@ -194,11 +194,13 @@ public class RoleResource {
 	}
 	
 	
-	@POST
-	@Path("/{id}/permissions")
+	@PUT
+	@Path("/{roleid}/permissions/{permissionid}")
 	@Consumes("application/json")
-	public Response addPermission(@PathParam("id") Integer id, PermissionDTO permission) {
-
+	public Response addPermission(
+			@PathParam("roleid") Integer roleId,
+			@PathParam("permissionid") Integer permissionId) {
+		
 		logger.debug("addPermission called!");
 		
 		Subject currentUser = SecurityUtils.getSubject();
@@ -206,17 +208,10 @@ public class RoleResource {
 			return Response.status(Status.UNAUTHORIZED).entity("Operation not permitted.").build();
 		}
 		
-		// Check if DTO contains permission id.
-		// The rest of the DTO is ignored and not checked for coherence.
-		//
-		if(permission.getId() == null) {
-			return Response.status(Status.BAD_REQUEST).entity("Missing permission id in request body.").build();			
-		}
-		
 		RoleService rs = ServiceFactory.createRoleService();
 		Permission entity = null;
 		try {
-			entity = rs.addPermissionToRole(id, permission.getId());
+			entity = rs.addPermissionToRole(roleId, permissionId);
 		} catch(NotFoundException nfe) {
 			return Response.status(Status.NOT_FOUND).entity(nfe.getMessage()).build();
 		} catch(AlreadyPresentException ape) {

@@ -12,7 +12,7 @@ define([
 		},
 		
 		urlRoot: "/ivncr/api/roles",			
-
+		
 		validate: function(changed) {
 			
 			var errors = {};

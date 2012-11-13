@@ -41,6 +41,18 @@
 			<param-name>exclude</param-name>
 			<param-value>.*/security/sessions.*</param-value>
 		</init-param>
+		<init-param>
+			<param-name>autoLogonMode</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>autoLogonUser</param-name>
+			<param-value>admin</param-value>
+		</init-param>
+		<init-param>
+			<param-name>autoLogonPassword</param-name>
+			<param-value>admin</param-value>
+		</init-param>
 	</filter>
 
 	<filter-mapping>

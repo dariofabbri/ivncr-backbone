@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.SessionException;
 import org.apache.shiro.session.mgt.DefaultSessionKey;
@@ -32,6 +34,9 @@ public class ShiroFilter implements Filter {
 	protected static final String SECURITY_TOKEN_HEADER = "X-Security-Token";
 	
 	private Pattern excludePattern = null;
+	private boolean autoLogonMode = false;
+	private String autoLogonUser = null;
+	private String autoLogonPassword = null;
 	
 	@Override
 	public void init(FilterConfig filterConfig) 
@@ -41,6 +46,12 @@ public class ShiroFilter implements Filter {
 		if(exclude != null) {
 			excludePattern = Pattern.compile(exclude);
 		}
+
+		autoLogonUser = filterConfig.getInitParameter("autoLogonUser");
+		autoLogonPassword = filterConfig.getInitParameter("autoLogonPassword");
+		String s = filterConfig.getInitParameter("autoLogonMode");
+		if(s != null)
+			autoLogonMode = Boolean.parseBoolean(s);
 	}
 
 	@Override
@@ -66,42 +77,69 @@ public class ShiroFilter implements Filter {
 			return;
 		}
 
-		// Extract security token from custom header.
-		//
-		String token = hsr.getHeader(SECURITY_TOKEN_HEADER);
-		logger.debug("Security token found in header: " + token);
+		Subject requestSubject = null;
 		
-		// SecurityResource token must be present.
+		// Check if autologon mode is on.
 		//
-		if(token == null) {
-			logger.info("No token found in request headers.");
-			raiseSecurityError(response, "Null token detected");
-			return;
-		}
-		
-		// Check if the passed token is associated with a valid session.
-		//
-		try {
-			Session session = SecurityUtils.getSecurityManager().getSession(new DefaultSessionKey(token));
-			if(session == null) {
-				logger.info("Unable to find a valid session using token.");
-				raiseSecurityError(response, "Invalid session token.");
+		if(autoLogonMode) {
+
+			requestSubject = new Subject.Builder().buildSubject();
+
+			UsernamePasswordToken upt = new UsernamePasswordToken(
+					autoLogonUser,
+					autoLogonPassword);
+			
+			try {
+				requestSubject.login(upt);
+				
+			} catch(AuthenticationException ae) {
+
+				logger.info(ae.getMessage());
+				raiseSecurityError(response, "Unable to logon. Cause: " + ae.getMessage());
+				return;
+			}
+
+		} else {
+			
+			// Extract security token from custom header.
+			//
+			String token = hsr.getHeader(SECURITY_TOKEN_HEADER);
+			logger.debug("Security token found in header: " + token);
+			
+			// SecurityResource token must be present.
+			//
+			if(token == null) {
+				logger.info("No token found in request headers.");
+				raiseSecurityError(response, "Null token detected");
 				return;
 			}
 			
-			// Ensure that the last accessed timestamp gets updated. This should be made
-			// internally by Shiro, but it looks like it is not working. Maybe the pattern
-			// employed here to get the session is not canonical...
+			// Check if the passed token is associated with a valid session.
 			//
-			session.touch();
+			try {
+				Session session = SecurityUtils.getSecurityManager().getSession(new DefaultSessionKey(token));
+				if(session == null) {
+					logger.info("Unable to find a valid session using token.");
+					raiseSecurityError(response, "Invalid session token.");
+					return;
+				}
+				
+				// Ensure that the last accessed timestamp gets updated. This should be made
+				// internally by Shiro, but it looks like it is not working. Maybe the pattern
+				// employed here to get the session is not canonical...
+				//
+				session.touch();
+				
+			} catch(SessionException se) {
+				
+				logger.info(se.getMessage());
+				raiseSecurityError(response, "Invalid session token. Cause: " + se.getMessage());
+				return;
+			}
 			
-		} catch(SessionException se) {
-			logger.info(se.getMessage());
-			raiseSecurityError(response, "Invalid session token. Cause: " + se.getMessage());
-			return;
+			requestSubject = new Subject.Builder().sessionId(token).buildSubject();
 		}
 		
-		Subject requestSubject = new Subject.Builder().sessionId(token).buildSubject();		
 		ThreadState threadState = new SubjectThreadState(requestSubject);
 		threadState.bind();
 		try {
