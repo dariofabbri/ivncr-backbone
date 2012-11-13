@@ -181,5 +181,6 @@ public class RoleServiceImpl extends AbstractService implements RoleService {
 		
 		role.getPermissions().remove(foundPermission);
 		session.update(role);
+		session.flush();
 	}
 }

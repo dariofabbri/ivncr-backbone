@@ -1,29 +1,41 @@
-<form class="well form-horizontal">
-	<legend>Dettaglio del ruolo</legend>
-	<div class="control-group">
-		<label class="control-label" for="rolename">Nome del ruolo: </label>
-		<div class="controls">
-			<input 
-				id="rolename" 
-				type="text" 
-				placeholder="Inserisci il nome del ruolo"
-				value="<%=rolename%>" />
-			<span class="help-inline"></span>
-		</div>
+<ul class="nav nav-tabs" id="tabbedPane">
+  <li class="active"><a href="#details" data-toggle="tab">Dettagli</a></li>
+  <li><a href="#permissions" data-toggle="tab">Permessi</a></li>
+</ul>
+
+<div class="tab-content">
+	<div class="tab-pane active" id="details">
+		<form class="well form-horizontal">
+			<legend>Dettaglio del ruolo</legend>
+			<div class="control-group">
+				<label class="control-label" for="rolename">Nome del ruolo: </label>
+				<div class="controls">
+					<input 
+						id="rolename" 
+						type="text" 
+						placeholder="Inserisci il nome del ruolo"
+						value="<%=rolename%>" />
+					<span class="help-inline"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="description">Descrizione: </label>
+				<div class="controls">
+					<input 
+						id="description" 
+						type="text" 
+						placeholder="Inserisci la descrizione del ruolo"
+						value="<%=description%>" />
+					<span class="help-inline"></span>
+				</div>
+			</div>
+			<div class="form-actions">
+				<a id="cancel" class="btn">Annulla</a>
+				<a id="save" class="btn btn-primary">Salva</a>
+			</div>
+		</form>
 	</div>
-	<div class="control-group">
-		<label class="control-label" for="description">Descrizione: </label>
-		<div class="controls">
-			<input 
-				id="description" 
-				type="text" 
-				placeholder="Inserisci la descrizione del ruolo"
-				value="<%=description%>" />
-			<span class="help-inline"></span>
-		</div>
+	<div class="tab-pane" id="permissions">
 	</div>
-	<div class="form-actions">
-		<a id="cancel" class="btn">Annulla</a>
-		<a id="save" class="btn btn-primary">Salva</a>
-	</div>
-</form>
+</div>
+	

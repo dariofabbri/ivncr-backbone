@@ -1,6 +1,7 @@
 package it.dariofabbri.ivncr.model.security;
 
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -36,7 +37,7 @@ public class Role {
 			joinColumns = { @JoinColumn(name="roleid", referencedColumnName="id")},
 			inverseJoinColumns = { @JoinColumn(name="permissionid", referencedColumnName="id")}
 	)
-	private Set<Permission> permissions;
+	private List<Permission> permissions;
 
 	@OneToMany
 	@JoinTable(
@@ -70,11 +71,11 @@ public class Role {
 		this.description = description;
 	}
 
-	public Set<Permission> getPermissions() {
+	public List<Permission> getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(Set<Permission> permissions) {
+	public void setPermissions(List<Permission> permissions) {
 		this.permissions = permissions;
 	}
 

@@ -9,6 +9,7 @@ import it.dariofabbri.ivncr.service.local.QueryResult;
 import it.dariofabbri.ivncr.service.local.ServiceFactory;
 import it.dariofabbri.ivncr.service.local.role.RoleService;
 import it.dariofabbri.ivncr.service.rest.dto.PermissionDTO;
+import it.dariofabbri.ivncr.service.rest.dto.PermissionsDTO;
 import it.dariofabbri.ivncr.service.rest.dto.RoleDTO;
 import it.dariofabbri.ivncr.service.rest.dto.RolesDTO;
 import it.dariofabbri.ivncr.util.MappingUtil;
@@ -186,9 +187,13 @@ public class RoleResource {
 		} catch (NotFoundException nfe) {
 			return Response.status(Status.NOT_FOUND).entity(nfe.getMessage()).build();
 		}
+		
 
 		MappingUtil<PermissionDTO> mu = new MappingUtil<PermissionDTO>();
-		List<PermissionDTO> dto = mu.map(permissions, PermissionDTO.class);
+		List<PermissionDTO> list = mu.map(permissions, PermissionDTO.class);
+		PermissionsDTO dto = new PermissionsDTO();
+		dto.setRecords(permissions.size());
+		dto.setResults(list);
 
 		return Response.ok().entity(dto).build();
 	}

@@ -2,8 +2,10 @@ define([
 	"underscore", 
 	"backbone",
 	"jquery",
+	"ivncr/collections/permissions",
+	"ivncr/views/roles/rolespermissionslist",
 	"text!templates/roles/rolesedit.html"], 
-	function(_, Backbone, $, editTemplate) {
+	function(_, Backbone, $, Permissions, PermissionsView, editTemplate) {
 	
 	var view = Backbone.View.extend({
 		
@@ -13,10 +15,32 @@ define([
 			"click a#save": "save",
 			"click a#cancel": "cancel"
 		},
-		
+
+		childViews: [],
+
 		render: function() {
 
+			this.cleanChildViews();
+
 			this.$el.html(_.template(editTemplate, this.model.toJSON()));
+			
+			var permissions = new Permissions();
+			permissions.url = "api/roles/" + this.model.id + "/permissions";
+			permissions.fetch();
+			
+			// Create and render the permissions list view.
+			//
+			var permissionsView = new PermissionsView({
+				collection: permissions
+			});
+			$("div#permissions", this.el).append(permissionsView.render().el);
+			
+			// Store the subview in the list of child views, to avoid
+			// memory leaks.
+			//
+			this.childViews.push(permissionsView);
+				
+			
 			return this;
 		},
 		
