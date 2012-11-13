@@ -220,7 +220,7 @@ public class RoleResource {
 				
 		Mapper mapper = DozerBeanMapperSingletonWrapper.getInstance();
         PermissionDTO dto = mapper.map(entity, PermissionDTO.class);
-		return Response.status(Status.CREATED).entity(dto).build();
+		return Response.ok(dto).build();
 	}
 	
 	

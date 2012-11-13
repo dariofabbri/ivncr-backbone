@@ -202,10 +202,12 @@ public class UserResource {
 	}
 	
 	
-	@POST
+	@PUT
 	@Path("/{id}/roles")
 	@Consumes("application/json")
-	public Response addRole(@PathParam("id") Integer id, RoleDTO role) {
+	public Response addRole(
+			@PathParam("userid") Integer userId, 
+			@PathParam("roleid") Integer roleId) {
 
 		logger.debug("addRole called!");
 		
@@ -214,17 +216,10 @@ public class UserResource {
 			return Response.status(Status.UNAUTHORIZED).entity("Operation not permitted.").build();
 		}
 		
-		// Check if DTO contains role id.
-		// The rest of the DTO is ignored and not checked for coherence.
-		//
-		if(role.getId() == null) {
-			return Response.status(Status.BAD_REQUEST).entity("Missing role id in request body.").build();			
-		}
-		
 		UserService us = ServiceFactory.createUserService();
 		Role entity = null;
 		try {
-			entity = us.addRoleToUser(id, role.getId());
+			entity = us.addRoleToUser(userId, roleId);
 		} catch(NotFoundException nfe) {
 			return Response.status(Status.NOT_FOUND).entity(nfe.getMessage()).build();
 		} catch(AlreadyPresentException ape) {
@@ -233,7 +228,7 @@ public class UserResource {
 				
 		Mapper mapper = DozerBeanMapperSingletonWrapper.getInstance();
         RoleDTO dto = mapper.map(entity, RoleDTO.class);
-		return Response.status(Status.CREATED).entity(dto).build();
+		return Response.ok(dto).build();
 	}
 	
 	
