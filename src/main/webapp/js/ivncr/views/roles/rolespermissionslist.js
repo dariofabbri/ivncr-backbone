@@ -2,16 +2,22 @@ define([
 	"underscore", 
 	"backbone",
 	"jquery",
+	"ivncr/collections/permissions",
 	"ivncr/views/roles/rolespermissionslistitem",
+	"ivncr/views/roles/permissionspicker",
 	"text!templates/roles/rolespermissionslist.html"], 
-	function(_, Backbone, $, ItemView, listTemplate) {
+	function(_, Backbone, $, 
+			Permissions, 
+			ItemView, 
+			PermissionsPickerView, 
+			listTemplate) {
 	
 	var view = Backbone.View.extend({
 		
 		tagName: "div",
 
 		events: {
-			"click a#add": "addItem"
+			"click a#add": "openPicker"
 		},
 
 		initialize: function() {
@@ -61,9 +67,35 @@ define([
 			this.childViews.push(itemView);
 		},
 		
-		addItem: function() {
+		openPicker: function() {
 			
-			$("div#permission-picker", this.el).modal("show");
+			var permissions = new Permissions();
+			var pickerView = new PermissionsPickerView({
+				collection: permissions
+			});
+			pickerView.on("picker:save", this.addSelectedPermissions, this);
+			
+			this.childViews.push(pickerView);
+			
+			$("div#pickerContainer", this.el).html(pickerView.render().el);
+			
+			permissions.fetch({success: function() {
+				$("div#permissionPicker", this.el).modal("show");	
+			}});
+		},
+		
+		addSelectedPermissions: function(selected) {
+			
+			var that = this;
+			_.each(selected, function(item) {
+				
+				var model = new (that.collection.model)();
+				model.urlRoot = that.collection.url;
+				model.set("id", item);
+				model.save(null, {async: false});
+			});
+			
+			this.collection.fetch();
 		}
 	});
 	
