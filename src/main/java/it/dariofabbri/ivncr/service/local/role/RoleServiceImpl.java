@@ -116,7 +116,8 @@ public class RoleServiceImpl extends AbstractService implements RoleService {
 		String hql = 
 				"select distinct per from Permission per " +
 				"inner join per.roles rol " +
-				"where rol.id = :id";
+				"where rol.id = :id " +
+				"order by per.permissionString ";
 		Query query = session.createQuery(hql);
 		query.setParameter("id", id);
 		List<Permission> list = (List<Permission>)query.list();

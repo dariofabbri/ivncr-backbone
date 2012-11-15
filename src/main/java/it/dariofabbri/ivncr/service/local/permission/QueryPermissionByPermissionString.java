@@ -52,7 +52,7 @@ public class QueryPermissionByPermissionString extends Query<Permission> {
 		if(permissionString != null)
 			hql += "and upper(per.permissionString) like :permissionString ";
 		
-		hql += "order by per.id ";
+		hql += "order by per.permissionString ";
 		
 		return hql;
 	}
