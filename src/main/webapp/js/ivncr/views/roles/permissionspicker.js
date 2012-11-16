@@ -2,9 +2,9 @@ define([
 	"underscore", 
 	"backbone",
 	"jquery",
-	"ivncr/views/roles/permissionspickeritem",
-	"text!templates/roles/permissionspicker.html"], 
-	function(_, Backbone, $, ItemView, listTemplate) {
+	"text!templates/roles/permissionspicker.html",
+	"text!templates/roles/permissionspickeritem.html"], 
+	function(_, Backbone, $, listTemplate, itemTemplate) {
 	
 	var view = Backbone.View.extend({
 		
@@ -16,11 +16,11 @@ define([
 		},
 
 		initialize: function() {
-			this.collection.on("reset", this.render, this);
+			//this.collection.on("reset", this.render, this);
 		},
 
 		onClose: function() {
-			this.collection.off("reset", this.render);
+			//this.collection.off("reset", this.render);
 		},
 
 		childViews: [],
@@ -35,30 +35,15 @@ define([
 				collection: this.collection
 			}));
 
-			// Render an item view for each model in the collection.
+			// Render a line for each model in the collection.
 			//
 			var that = this;
 			_.each(this.collection.models, function(item) {
-				that.renderItem(item);
-			}, this);
+				$("div.modal-body", that.el).append(_.template(itemTemplate, item.toJSON()));
+			});
 			that = null;
 			
 			return this;
-		},
-		
-		renderItem: function(item) {
-			
-			// Create and render the item view.
-			//
-			var itemView = new ItemView({
-				model : item
-			});
-			$("div.modal-body", this.el).append(itemView.render().el);
-			
-			// Store the item view in the list of child views, to avoid
-			// memory leaks.
-			//
-			this.childViews.push(itemView);
 		},
 		
 		doClose: function(e) {

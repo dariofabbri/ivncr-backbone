@@ -1,6 +1,19 @@
 <p>
+<%
+if(alreadyPresent) {
+%>
+	<label class="checkbox">
+		<input type="checkbox" name="permissions" value="<%=id%>" disabled>
+		<span class="muted"><%=permissionString%></span>
+	</label>
+<%
+} else {
+%>
 	<label class="checkbox">
 		<input type="checkbox" name="permissions" value="<%=id%>">
 		<%=permissionString%>
 	</label>
+<%
+}
+%>
 </p>

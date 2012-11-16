@@ -69,17 +69,41 @@ define([
 		
 		openPicker: function() {
 			
+			// Create the picker view object by passing a new
+			// collection of permissions.
+			// 
 			var permissions = new Permissions();
 			var pickerView = new PermissionsPickerView({
 				collection: permissions
 			});
+			
+			// Subscribe to save event of picker view.
+			//
 			pickerView.on("picker:save", this.addSelectedPermissions, this);
 			
+			// Keep a reference to picker view for later clean-up.
+			//
 			this.childViews.push(pickerView);
 			
-			$("div#pickerContainer", this.el).html(pickerView.render().el);
-			
+			// Fetch the permission list from the server.
+			//
+			var that = this;
 			permissions.fetch({success: function() {
+				
+				// Mark already added permissions.
+				//
+				_.each(permissions.models, function(permission) {
+					
+					if(that.collection.get(permission.id)) {
+						permission.set("alreadyPresent", true);
+					} else {
+						permission.set("alreadyPresent", false);
+					}
+				});
+				
+				// Render the view and show modal.
+				//
+				$("div#pickerContainer", this.el).html(pickerView.render().el);
 				$("div#permissionPicker", this.el).modal("show");	
 			}});
 		},
