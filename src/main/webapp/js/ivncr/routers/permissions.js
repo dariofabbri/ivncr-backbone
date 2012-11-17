@@ -3,7 +3,6 @@ define([
 	"backbone",
 	"ivncr/views/permissions/permissionslist",
 	"ivncr/views/permissions/permissionsedit",
-	"ivncr/views/permissions/permissionssearch",
 	"ivncr/models/permission",
 	"ivncr/collections/permissions"], 
 	function(
@@ -11,7 +10,6 @@ define([
 			Backbone, 
 			PermissionsListView, 
 			PermissionsEditView,
-			PermissionsSearchView,
 			Permission,
 			Permissions) {
 
@@ -23,8 +21,7 @@ define([
 			"PermissionsList": "list",
 			"PermissionsList/page/:page": "page",
 			"PermissionsNew": "create",
-			"PermissionsEdit/:id": "edit",
-			"PermissionsSearch": "search"
+			"PermissionsEdit/:id": "edit"
 		},
 		
 		list: function() {
@@ -53,12 +50,6 @@ define([
 			var model = this.collection.get(id);
 			var view = new PermissionsEditView({model: model});
 			
-			this.show(view, "#container");
-		},
-		
-		search: function() {
-
-			var view = new PermissionsSearchView({collection: this.collection});
 			this.show(view, "#container");
 		}
 	});

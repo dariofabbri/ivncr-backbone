@@ -1,18 +1,25 @@
-<form class="well form-horizontal">
-	<legend>Pannello di ricerca</legend>
-	<div class="control-group">
-		<label class="control-label" for="permissionstring">Stringa di permesso: </label>
-		<div class="controls">
-			<input 
-				id="permissionstring" 
-				type="text" 
-				placeholder="Scrivi parte della stringa per filtrare la lista"
-				value="<%=collection.queryArguments.permissionString%>" />
-			<span class="help-inline"></span>
-		</div>
+<div id="searchModal" class="modal hide fade">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Pannello di ricerca</h3>
 	</div>
-	<div class="form-actions">
-		<a id="cancel" class="btn">Annulla</a>
-		<a id="search" class="btn btn-primary">Cerca</a>
+	<div class="modal-body">
+		<form class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label" for="permissionstring">Stringa di permesso: </label>
+				<div class="controls">
+					<input 
+						id="permissionstring" 
+						type="text" 
+						placeholder="Scrivi parte della stringa per filtrare la lista"
+						value="<%=collection.queryArguments.permissionString%>" />
+					<span class="help-inline"></span>
+				</div>
+			</div>
+		</form>
 	</div>
-</form>
+	<div class="modal-footer">
+		<a id="closeModal" class="btn">Chiudi</a>
+		<a id="saveModalSelection" class="btn btn-primary">Applica</a>
+	</div>
+</div>	

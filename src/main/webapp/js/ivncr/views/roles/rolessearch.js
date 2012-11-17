@@ -11,7 +11,8 @@ define([
 		
 		events: {
 			"click a#saveModalSelection": "search",
-			"click a#closeModal": "cancel"
+			"click a#closeModal": "cancel",
+			"keypress": "manageEnter"
 		},
 		
 		render: function() {
@@ -22,6 +23,13 @@ define([
 			return this;
 		},
 		
+		manageEnter: function(e) {
+			if (e.keyCode == 13) {
+				e.preventDefault();
+				this.search();
+			}
+		},
+
 		initialize: function() {
 		},
 

@@ -10,8 +10,9 @@ define([
 		tagName: "div",
 		
 		events: {
-			"click a#search": "search",
-			"click a#cancel": "cancel"
+			"click a#saveModalSelection": "search",
+			"click a#closeModal": "cancel",
+			"keypress": "manageEnter"
 		},
 		
 		render: function() {
@@ -25,24 +26,37 @@ define([
 		initialize: function() {
 		},
 		
-		autofocus: "#permissionstring",
+		manageEnter: function(e) {
+			if (e.keyCode == 13) {
+				e.preventDefault();
+				this.search();
+			}
+		},
 
 		search: function() {
 						
 			var permissionString = $("#permissionstring").val();
 
+			var that = this;
 			this.collection.fetchPage(1, {
 				permissionString: permissionString
-			}, {
-				success: function() {
-					Backbone.history.navigate("PermissionsList", true);		
-				}
 			});
+
+			$("div#searchModal", this.el).modal("hide");
+			this.close();
 		},
 		
 		cancel: function() {
 			
-			Backbone.history.navigate("PermissionsList", true);
+			$("div#searchModal", this.el).modal("hide");
+			this.close();
+		},
+		
+		setFocus: function() {
+			
+			// Set focus to role name filter field.
+			//
+			$("input#permissionstring", this.el).focus();
 		}
 	});
 	

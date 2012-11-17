@@ -4,8 +4,9 @@ define([
 	"jquery",
 	"ivncr/views/common/pager",
 	"ivncr/views/permissions/permissionslistitem",
+	"ivncr/views/permissions/permissionssearch",
 	"text!templates/permissions/permissionslist.html"], 
-	function(_, Backbone, $, Pager, ItemView, listTemplate) {
+	function(_, Backbone, $, Pager, ItemView, SearchView, listTemplate) {
 	
 	var view = Backbone.View.extend({
 		
@@ -88,7 +89,23 @@ define([
 		
 		search: function() {
 			
-			Backbone.history.navigate("PermissionsSearch", true);
+			// Create the search view object by passing the
+			// current collection, that will be used for reissuing
+			// the query on the backend.
+			// 
+			var searchView = new SearchView({
+				collection: this.collection
+			});
+			
+			// Keep a reference to search view for later clean-up.
+			//
+			this.childViews.push(searchView);
+				
+			// Render the view and show modal.
+			//
+			$("div#modalContainer", this.el).html(searchView.render().el);
+			$("div#searchModal", this.el).modal("show");
+			$("div#searchModal", this.el).on("shown", searchView.setFocus);
 		},
 
 		resetFilters: function() {

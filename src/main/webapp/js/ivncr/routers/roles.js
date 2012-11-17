@@ -3,7 +3,6 @@ define([
 	"backbone",
 	"ivncr/views/roles/roleslist",
 	"ivncr/views/roles/rolesedit",
-	"ivncr/views/roles/rolessearch",
 	"ivncr/models/role",
 	"ivncr/collections/roles"], 
 	function(
@@ -11,7 +10,6 @@ define([
 			Backbone, 
 			RolesListView, 
 			RolesEditView,
-			RolesSearchView,
 			Role,
 			Roles) {
 
@@ -23,8 +21,7 @@ define([
 			"RolesList": "list",
 			"RolesList/page/:page": "page",
 			"RolesNew": "create",
-			"RolesEdit/:id": "edit",
-			"RolesSearch": "search"
+			"RolesEdit/:id": "edit"
 		},
 		
 		list: function() {
@@ -53,12 +50,6 @@ define([
 			var model = this.collection.get(id);
 			var view = new RolesEditView({model: model});
 			
-			this.show(view, "#container");
-		},
-		
-		search: function() {
-
-			var view = new RolesSearchView({collection: this.collection});
 			this.show(view, "#container");
 		}
 	});
