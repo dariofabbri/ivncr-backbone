@@ -10,8 +10,8 @@ define([
 		tagName: "div",
 		
 		events: {
-			"click a#search": "search",
-			"click a#cancel": "cancel"
+			"click a#saveModalSelection": "search",
+			"click a#closeModal": "cancel"
 		},
 		
 		render: function() {
@@ -24,27 +24,33 @@ define([
 		
 		initialize: function() {
 		},
-		
-		autofocus: "#rolename",
 
 		search: function() {
 						
 			var rolename = $("#rolename").val();
 			var description = $("#description").val();
 
+			var that = this;
 			this.collection.fetchPage(1, {
 				rolename: rolename,
 				description: description
-			}, {
-				success: function() {
-					Backbone.history.navigate("RolesList", true);		
-				}
 			});
+
+			$("div#searchModal", this.el).modal("hide");
+			this.close();
 		},
 		
 		cancel: function() {
 			
-			Backbone.history.navigate("RolesList", true);
+			$("div#searchModal", this.el).modal("hide");
+			this.close();
+		},
+		
+		setFocus: function() {
+			
+			// Set focus to role name filter field.
+			//
+			$("input#rolename", this.el).focus();
 		}
 	});
 	

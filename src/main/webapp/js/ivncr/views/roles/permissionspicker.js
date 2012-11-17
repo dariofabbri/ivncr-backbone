@@ -11,16 +11,9 @@ define([
 		tagName: "div",
 
 		events: {
-			"click a#closePicker": "doClose",
-			"click a#savePickerSelection": "doSave"
-		},
-
-		initialize: function() {
-			//this.collection.on("reset", this.render, this);
-		},
-
-		onClose: function() {
-			//this.collection.off("reset", this.render);
+			"click a#closeModal": "doClose",
+			"click a#saveModalSelection": "doSave",
+			"keyup input#permissionFilter": "renderItems"
 		},
 
 		childViews: [],
@@ -35,17 +28,36 @@ define([
 				collection: this.collection
 			}));
 
-			// Render a line for each model in the collection.
+			// Render the item views.
 			//
-			var that = this;
-			_.each(this.collection.models, function(item) {
-				$("div.modal-body", that.el).append(_.template(itemTemplate, item.toJSON()));
-			});
-			that = null;
+			this.renderItems();
 			
 			return this;
 		},
 		
+		renderItems: function(e) {
+			
+			// Clean up previously added items.
+			//
+			$("div.modal-body>p", this.el).remove();
+			
+			// Get applied filter from search input textbox.
+			//
+			var filter = $("input#permissionFilter", this.el).val();
+			filter = filter && filter.trim().length > 0 ? filter.trim().toLowerCase() : null;
+			
+			// Iterate on collection's models, adding only items matching
+			// applied filter.
+			//
+			var that = this;
+			_.each(this.collection.models, function(item) {
+				
+				if(!filter || item.get("permissionString").indexOf(filter) >= 0) {
+					$("div.modal-body", that.el).append(_.template(itemTemplate, item.toJSON()));
+				}
+			});
+		},
+
 		doClose: function(e) {
 			
 			e.preventDefault();
@@ -76,6 +88,13 @@ define([
 			// Close the view.
 			//
 			this.close();
+		},
+		
+		setFocus: function() {
+			
+			// Set focus to permissions filter field.
+			//
+			$("input#permissionFilter", this.el).focus();
 		}
 	});
 	

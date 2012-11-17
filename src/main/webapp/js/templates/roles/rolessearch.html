@@ -1,29 +1,36 @@
-<form class="well form-horizontal">
-	<legend>Pannello di ricerca</legend>
-	<div class="control-group">
-		<label class="control-label" for="rolename">Nome del ruolo: </label>
-		<div class="controls">
-			<input 
-				id="rolename" 
-				type="text" 
-				placeholder="Scrivi parte del nome per filtrare la lista"
-				value="<%=collection.queryArguments.rolename%>" />
-			<span class="help-inline"></span>
-		</div>
+<div id="searchModal" class="modal hide fade">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Pannello di ricerca</h3>
 	</div>
-	<div class="control-group">
-		<label class="control-label" for="description">Description: </label>
-		<div class="controls">
-			<input 
-				id="description" 
-				type="text" 
-				placeholder="Scrivi parte della descrizione per filtrare la lista"
-				value="<%=collection.queryArguments.description%>" />
-			<span class="help-inline"></span>
-		</div>
+	<div class="modal-body">
+		<form class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label" for="rolename">Nome del ruolo: </label>
+				<div class="controls">
+					<input 
+						id="rolename" 
+						type="text" 
+						placeholder="Scrivi parte del nome per filtrare la lista"
+						value="<%=collection.queryArguments.rolename%>" />
+					<span class="help-inline"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="description">Descrizione: </label>
+				<div class="controls">
+					<input 
+						id="description" 
+						type="text" 
+						placeholder="Scrivi parte della descrizione per filtrare la lista"
+						value="<%=collection.queryArguments.description%>" />
+					<span class="help-inline"></span>
+				</div>
+			</div>
+		</form>
 	</div>
-	<div class="form-actions">
-		<a id="cancel" class="btn">Annulla</a>
-		<a id="search" class="btn btn-primary">Cerca</a>
+	<div class="modal-footer">
+		<a id="closeModal" class="btn">Chiudi</a>
+		<a id="saveModalSelection" class="btn btn-primary">Salva</a>
 	</div>
-</form>
+</div>	

@@ -103,8 +103,9 @@ define([
 				
 				// Render the view and show modal.
 				//
-				$("div#pickerContainer", this.el).html(pickerView.render().el);
-				$("div#permissionPicker", this.el).modal("show");	
+				$("div#modalContainer", this.el).html(pickerView.render().el);
+				$("div#permissionPicker", this.el).modal("show");
+				$("div#permissionPicker", this.el).on("shown", pickerView.setFocus);
 			}});
 		},
 		
