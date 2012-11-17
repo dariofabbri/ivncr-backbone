@@ -1,6 +1,12 @@
 <ul class="nav nav-tabs" id="tabbedPane">
   <li class="active"><a href="#details" data-toggle="tab">Dettagli</a></li>
+<%
+if(id) {
+%>  
   <li><a href="#permissions" data-toggle="tab">Permessi</a></li>
+<%
+}
+%>
 </ul>
 
 <div class="tab-content">

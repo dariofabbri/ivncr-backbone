@@ -11,6 +11,7 @@ define([
 		tagName: "div",
 
 		events: {
+			"click input#selectAll": "toggleAll",
 			"click a#closeModal": "doClose",
 			"click a#saveModalSelection": "doSave",
 			"keyup input#permissionFilter": "renderItems"
@@ -39,7 +40,7 @@ define([
 			
 			// Clean up previously added items.
 			//
-			$("div.modal-body>p", this.el).remove();
+			$("div.modal-body>p#item", this.el).remove();
 			
 			// Get applied filter from search input textbox.
 			//
@@ -95,6 +96,12 @@ define([
 			// Set focus to permissions filter field.
 			//
 			$("input#permissionFilter", this.el).focus();
+		},
+		
+		toggleAll: function() {
+			
+			var checked = $("input:checkbox[id=selectAll]").prop("checked");
+			$("input:checkbox[name=permissions]:not(:disabled)").prop("checked", checked);
 		}
 	});
 	
