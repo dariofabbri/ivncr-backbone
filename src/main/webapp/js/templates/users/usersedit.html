@@ -1,0 +1,62 @@
+<form class="well form-horizontal">
+	<legend>Dettaglio dell'utente</legend>
+	<div class="control-group">
+		<label class="control-label" for="username">Username: </label>
+		<div class="controls">
+			<input 
+				id="username" 
+				type="text" 
+				placeholder="Inserisci lo username"
+				value="<%=username%>" />
+			<span class="help-inline"></span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="password">Password: </label>
+		<div class="controls">
+			<input 
+				id="password" 
+				type="text" 
+				placeholder="Inserisci la password"
+				value="<%=password%>" />
+			<span class="help-inline"></span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="firstName">Nome: </label>
+		<div class="controls">
+			<input 
+				id="firstName" 
+				type="text" 
+				placeholder="Inserisci il nome dell'utente"
+				value="<%=firstName%>" />
+			<span class="help-inline"></span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="lastName">Cognome: </label>
+		<div class="controls">
+			<input 
+				id="lastName" 
+				type="text" 
+				placeholder="Inserisci il cognome dell'utente"
+				value="<%=lastName%>" />
+			<span class="help-inline"></span>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="description">Descrizione: </label>
+		<div class="controls">
+			<input 
+				id="description" 
+				type="text" 
+				placeholder="Inserisci eventuali annotazioni"
+				value="<%=description%>" />
+			<span class="help-inline"></span>
+		</div>
+	</div>
+	<div class="form-actions">
+		<a id="cancel" class="btn">Annulla</a>
+		<a id="save" class="btn btn-primary">Salva</a>
+	</div>
+</form>

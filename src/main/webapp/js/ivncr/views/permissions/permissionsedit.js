@@ -26,7 +26,7 @@ define([
 			this.model.on("change", this.render, this);
 		},
 		
-		autofocus: "#firstname",
+		autofocus: "#permissionstring",
 
 		save: function() {
 						

@@ -2,7 +2,7 @@ define([
 	"underscore", 
 	"backbone",
 	"jquery",
-	"text!templates/permissions/permissionssearch.html"], 
+	"text!templates/users/userssearch.html"], 
 	function(_, Backbone, $, searchTemplate) {
 	
 	var view = Backbone.View.extend({
@@ -35,11 +35,18 @@ define([
 
 		search: function() {
 						
-			var permissionString = $("#permissionstring").val();
+			var username = $("#username").val();
+			var firstName = $("#firstName").val();
+			var lastName = $("#lastName").val();
+			var description = $("#description").val();
+			
 
 			var that = this;
 			this.collection.fetchPage(1, {
-				permissionString: permissionString
+				username: username,
+				firstName: firstName,
+				lastName: lastName,
+				description: description
 			});
 
 			$("div#searchModal", this.el).modal("hide");

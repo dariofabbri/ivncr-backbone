@@ -18,7 +18,7 @@ CREATE TABLE sec_role
 CREATE TABLE sec_permission
 (
 	id serial NOT NULL PRIMARY KEY,
-	permstring VARCHAR(255) NOT NULL
+	permstring VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE sec_user_role

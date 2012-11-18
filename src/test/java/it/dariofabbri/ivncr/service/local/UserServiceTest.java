@@ -14,7 +14,7 @@ public class UserServiceTest extends BaseServiceTest {
 		
 		UserService us = ServiceFactory.createUserService();
 		
-		User user = us.createUser("gino", "Gino", "Pilota", "A test user");
+		User user = us.createUser("gino", "password", "Gino", "Pilota", "A test user");
 		Assert.assertNotNull(user);
 		
 		System.out.println(user.getId());

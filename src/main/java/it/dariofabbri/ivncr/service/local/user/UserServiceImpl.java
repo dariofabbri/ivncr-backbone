@@ -9,10 +9,14 @@ import it.dariofabbri.ivncr.service.local.QueryResult;
 
 import java.util.List;
 
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.hibernate.Query;
 
 public class UserServiceImpl extends AbstractService implements UserService {
 
+	private static final int HASH_ITERATIONS = 10000;
+	
 	@Override
 	public QueryResult<User> listUsers(
 			String username,
@@ -72,7 +76,8 @@ public class UserServiceImpl extends AbstractService implements UserService {
 
 	@Override
 	public User createUser(
-			String username, 
+			String username,
+			String password,
 			String firstName, 
 			String lastName, 
 			String description) {
@@ -84,6 +89,13 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		user.setLastName(lastName);
 		user.setDescription(description);
 		
+		String salt = generateSalt();
+		String digest = generateDigest(password, salt, HASH_ITERATIONS);
+
+		user.setDigest(digest);
+		user.setSalt(salt);
+		user.setIterations(HASH_ITERATIONS);
+		
 		session.save(user);
 		
 		return user;
@@ -93,6 +105,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
 	public User updateUser(
 			Integer id, 
 			String username,
+			String password,
 			String firstName, 
 			String lastName, 
 			String description) {
@@ -109,6 +122,13 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		user.setLastName(lastName);
 		user.setDescription(description);
 		
+		String salt = generateSalt();
+		String digest = generateDigest(password, salt, HASH_ITERATIONS);
+
+		user.setDigest(digest);
+		user.setSalt(salt);
+		user.setIterations(HASH_ITERATIONS);
+
 		session.update(user);
 		
 		return user;
@@ -193,5 +213,21 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		
 		user.getRoles().remove(foundRole);
 		session.update(user);
+	}
+	
+	
+	private String generateSalt() {
+		
+		SecureRandomNumberGenerator srng = new SecureRandomNumberGenerator();
+		String salt = srng.nextBytes(64).toHex();
+
+		return salt;
+	}
+	
+	
+	private String generateDigest(String password, String salt, int iterations) {
+		
+		String hashed = new SimpleHash("SHA-512", password, salt, iterations).toHex();
+		return hashed;		
 	}
 }

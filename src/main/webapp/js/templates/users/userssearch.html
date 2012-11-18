@@ -1,0 +1,47 @@
+<div id="searchModal" class="modal hide fade">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Pannello di ricerca</h3>
+	</div>
+	<div class="modal-body">
+		<form class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label" for="username">Username: </label>
+				<div class="controls">
+					<input 
+						id="username" 
+						type="text" 
+						placeholder="Scrivi parte dello username per filtrare la lista"
+						value="<%=collection.queryArguments.username%>" />
+					<span class="help-inline"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="firstName">Nome: </label>
+				<div class="controls">
+					<input 
+						id="firstName" 
+						type="text" 
+						placeholder="Scrivi parte del nome per filtrare la lista"
+						value="<%=collection.queryArguments.firstName%>" />
+					<span class="help-inline"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="firstName">Cognome: </label>
+				<div class="controls">
+					<input 
+						id="lastName" 
+						type="text" 
+						placeholder="Scrivi parte del cognome per filtrare la lista"
+						value="<%=collection.queryArguments.lastName%>" />
+					<span class="help-inline"></span>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<a id="closeModal" class="btn">Chiudi</a>
+		<a id="saveModalSelection" class="btn btn-primary">Applica</a>
+	</div>
+</div>	

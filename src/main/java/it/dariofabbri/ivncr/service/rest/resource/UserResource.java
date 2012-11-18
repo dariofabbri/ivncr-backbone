@@ -134,6 +134,7 @@ public class UserResource {
 		UserService us = ServiceFactory.createUserService();
 		User entity = us.createUser(
 				user.getUsername(),
+				user.getPassword(),
 				user.getFirstName(),
 				user.getLastName(),
 				user.getDescription());
@@ -164,6 +165,7 @@ public class UserResource {
 			us.updateUser(
 				id,
 				user.getUsername(),
+				user.getPassword(),
 				user.getFirstName(),
 				user.getLastName(),
 				user.getDescription());

@@ -22,9 +22,9 @@ public interface UserService extends Service {
 
 	void deleteUserById(Integer id);
 
-	User createUser(String username, String firstName, String lastName, String description);
+	User createUser(String username, String password, String firstName, String lastName, String description);
 
-	User updateUser(Integer id, String username, String firstName, String lastName, String description);
+	User updateUser(Integer id, String username, String password, String firstName, String lastName, String description);
 
 	List<Role> retrieveUserRoles(Integer id);
 	
