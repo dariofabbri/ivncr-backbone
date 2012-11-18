@@ -3,14 +3,14 @@ define([
 	"backbone",
 	"ivncr/views/users/userslist",
 	"ivncr/views/users/usersedit",
-	"ivncr/models/user",
+	"ivncr/models/userwithpassword",
 	"ivncr/collections/users"], 
 	function(
 			_, 
 			Backbone, 
 			UsersListView, 
 			UsersEditView,
-			User,
+			UserWithPassword,
 			Users) {
 
 	var users = Backbone.Router.extend({
@@ -40,14 +40,20 @@ define([
 		create: function() {
 
 			var view = new UsersEditView({
-				model: new User()
+				model: new UserWithPassword()
 			});
 			this.show(view, "#container");
 		},
 		
 		edit: function(id) {
 			
-			var model = this.collection.get(id);
+			var model = new UserWithPassword(_.pick(this.collection.get(id).toJSON(),
+					"id",
+					"username", 
+					"firstName", 
+					"lastName", 
+					"description"));
+
 			var view = new UsersEditView({
 				model: model
 			});

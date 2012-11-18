@@ -122,13 +122,15 @@ public class UserServiceImpl extends AbstractService implements UserService {
 		user.setLastName(lastName);
 		user.setDescription(description);
 		
-		String salt = generateSalt();
-		String digest = generateDigest(password, salt, HASH_ITERATIONS);
-
-		user.setDigest(digest);
-		user.setSalt(salt);
-		user.setIterations(HASH_ITERATIONS);
-
+		if(password != null && password.trim().length() > 0) {
+			String salt = generateSalt();
+			String digest = generateDigest(password, salt, HASH_ITERATIONS);
+	
+			user.setDigest(digest);
+			user.setSalt(salt);
+			user.setIterations(HASH_ITERATIONS);
+		}
+		
 		session.update(user);
 		
 		return user;

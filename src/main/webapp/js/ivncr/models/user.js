@@ -7,11 +7,10 @@ define([
 	
 		defaults: {
 			id: null,
-			username: "",
-			password: "",
-			firstName: "",
-			lastName: "",
-			description: ""
+			username: null,
+			firstName: null,
+			lastName: null,
+			description: null
 		},
 		
 		urlRoot: "/ivncr/api/users",			
@@ -23,19 +22,6 @@ define([
 			if(!_.isUndefined(changed.username)) {
 				if(_.isEmpty(changed.username)) {
 					errors.username = "Il campo è obbligatorio.";
-				}
-			}
-			
-			// The password must be validated only when the id is
-			// not present. The model coming from the server obviously
-			// does not have the password field.
-			//
-			if(_.isUndefined(changed.id) && !_.isUndefined(changed.password)) {
-				if(_.isEmpty(changed.password)) {
-					errors.password = "Il campo è obbligatorio.";
-				}
-				else if(changed.password.length < 6) {
-					errors.password = "La password introdotta è troppo corta.";
 				}
 			}
 			

@@ -2,8 +2,9 @@ define([
 	"underscore", 
 	"backbone",
 	"jquery",
+	"ivncr/models/user",
 	"text!templates/users/usersedit.html"], 
-	function(_, Backbone, $, editTemplate) {
+	function(_, Backbone, $, User, editTemplate) {
 	
 	var view = Backbone.View.extend({
 		
@@ -32,6 +33,7 @@ define([
 						
 			var username = $("#username").val();
 			var password = $("#password").val();
+			var confirmPassword = $("#confirmPassword").val();
 			var firstName = $("#firstName").val();
 			var lastName = $("#lastName").val();
 			var description = $("#description").val();
@@ -39,13 +41,21 @@ define([
 			var result = this.model.set({
 				username: username,
 				password: password,
+				confirmPassword: confirmPassword,
 				firstName: firstName,
 				lastName: lastName,
 				description: description
 			});
 			
 			if(result) {
-				this.model.save({}, {
+				var tmpModel = new User(_.pick(this.model.toJSON(),
+						"id",
+						"username", 
+						"password", 
+						"firstName", 
+						"lastName", 
+						"description"));
+				tmpModel.save({}, {
 					success: function() {
 						Backbone.history.navigate("UsersList", true);		
 					}
@@ -72,6 +82,13 @@ define([
 			}
 			else {
 				this.highlightField("#password", "success");
+			}
+			
+			if(errors.confirmPassword) {
+				this.highlightField("#confirmPassword", "error", errors.confirmPassword);
+			}
+			else {
+				this.highlightField("#confirmPassword", "success");
 			}
 			
 			if(errors.firstName) {
