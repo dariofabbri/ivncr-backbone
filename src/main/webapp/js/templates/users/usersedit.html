@@ -1,73 +1,94 @@
-<form class="well form-horizontal">
-	<legend>Dettaglio dell'utente</legend>
-	<div class="control-group">
-		<label class="control-label" for="username">Username: </label>
-		<div class="controls">
-			<input 
-				id="username" 
-				type="text" 
-				placeholder="Inserisci lo username"
-				value="<%=username%>" />
-			<span class="help-inline"></span>
-		</div>
+<ul class="nav nav-tabs" id="tabbedPane">
+  <li class="active"><a href="#details" data-toggle="tab">Dettagli</a></li>
+<%
+if(id) {
+%>  
+  <li><a href="#roles" data-toggle="tab">Ruoli</a></li>
+<%
+}
+%>
+</ul>
+
+<div class="tab-content">
+	<div class="tab-pane active" id="details">
+		
+		<form class="form-horizontal">
+			<legend>Dettaglio dell'utente</legend>
+			<div class="control-group">
+				<label class="control-label" for="username">Username: </label>
+				<div class="controls">
+					<input 
+						id="username" 
+						type="text" 
+						placeholder="Inserisci lo username"
+						value="<%=username%>" />
+					<span class="help-inline"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="password">Password: </label>
+				<div class="controls">
+					<input 
+						id="password" 
+						type="password" 
+						placeholder="Inserisci la password"
+						value="<%=password%>" />
+					<span class="help-inline"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="confirmPassword">Conferma password: </label>
+				<div class="controls">
+					<input 
+						id="confirmPassword" 
+						type="password" 
+						placeholder="Immetti nuovamente la password"
+						value="<%=confirmPassword%>" />
+					<span class="help-inline"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="firstName">Nome: </label>
+				<div class="controls">
+					<input 
+						id="firstName" 
+						type="text" 
+						placeholder="Inserisci il nome dell'utente"
+						value="<%=firstName%>" />
+					<span class="help-inline"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="lastName">Cognome: </label>
+				<div class="controls">
+					<input 
+						id="lastName" 
+						type="text" 
+						placeholder="Inserisci il cognome dell'utente"
+						value="<%=lastName%>" />
+					<span class="help-inline"></span>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="description">Descrizione: </label>
+				<div class="controls">
+					<input 
+						id="description" 
+						type="text" 
+						placeholder="Inserisci eventuali annotazioni"
+						value="<%=description%>" />
+					<span class="help-inline"></span>
+				</div>
+			</div>
+			<div class="form-actions">
+				<a id="cancel" class="btn">Annulla</a>
+				<a id="apply" class="btn">Applica</a>
+				<a id="save" class="btn btn-primary">Salva</a>
+			</div>
+		</form>
+
 	</div>
-	<div class="control-group">
-		<label class="control-label" for="password">Password: </label>
-		<div class="controls">
-			<input 
-				id="password" 
-				type="password" 
-				placeholder="Inserisci la password"
-				value="<%=password%>" />
-			<span class="help-inline"></span>
-		</div>
+	<div class="tab-pane" id="roles">
 	</div>
-	<div class="control-group">
-		<label class="control-label" for="confirmPassword">Conferma password: </label>
-		<div class="controls">
-			<input 
-				id="confirmPassword" 
-				type="password" 
-				placeholder="Immetti nuovamente la password"
-				value="<%=confirmPassword%>" />
-			<span class="help-inline"></span>
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label" for="firstName">Nome: </label>
-		<div class="controls">
-			<input 
-				id="firstName" 
-				type="text" 
-				placeholder="Inserisci il nome dell'utente"
-				value="<%=firstName%>" />
-			<span class="help-inline"></span>
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label" for="lastName">Cognome: </label>
-		<div class="controls">
-			<input 
-				id="lastName" 
-				type="text" 
-				placeholder="Inserisci il cognome dell'utente"
-				value="<%=lastName%>" />
-			<span class="help-inline"></span>
-		</div>
-	</div>
-	<div class="control-group">
-		<label class="control-label" for="description">Descrizione: </label>
-		<div class="controls">
-			<input 
-				id="description" 
-				type="text" 
-				placeholder="Inserisci eventuali annotazioni"
-				value="<%=description%>" />
-			<span class="help-inline"></span>
-		</div>
-	</div>
-	<div class="form-actions">
-		<a id="cancel" class="btn">Annulla</a>
-		<a id="save" class="btn btn-primary">Salva</a>
-	</div>
-</form>
+</div>
+	

@@ -12,6 +12,7 @@ define([
 		tagName: "div",
 		
 		events: {
+			"click a#apply": "apply",
 			"click a#save": "save",
 			"click a#cancel": "cancel"
 		},
@@ -24,9 +25,10 @@ define([
 
 			this.$el.html(_.template(editTemplate, this.model.toJSON()));
 
-			// The permissions list is only to be shown for already created users.
+			// The permissions list is only to be shown for already created roles.
 			//
 			if(this.model.id) {
+				
 				var permissions = new Permissions();
 				permissions.url = "api/roles/" + this.model.id + "/permissions";
 				permissions.fetch();
@@ -52,11 +54,16 @@ define([
 			this.model.on("error", this.showErrors, this);
 			this.model.on("change", this.render, this);
 		},
-		
-		autofocus: "#rolename",
 
-		save: function() {
-						
+		onClose: function() {
+
+			this.model.off("error", this.showError);
+			this.model.off("change", this.render);
+		},
+
+		autofocus: "#rolename",
+		
+		readForm: function() {
 			var rolename = $("#rolename").val();
 			var description = $("#description").val();
 
@@ -65,7 +72,19 @@ define([
 				description: description
 			});
 			
-			if(result) {
+			return result;
+		},
+
+		apply: function() {
+			
+			if(this.readForm()) {
+				this.model.save();
+			}			
+		},
+		
+		save: function() {
+						
+			if(this.readForm()) {
 				this.model.save({}, {
 					success: function() {
 						Backbone.history.navigate("RolesList", true);		

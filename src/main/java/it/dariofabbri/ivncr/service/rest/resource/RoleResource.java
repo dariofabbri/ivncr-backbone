@@ -201,7 +201,6 @@ public class RoleResource {
 	
 	@PUT
 	@Path("/{roleid}/permissions/{permissionid}")
-	@Consumes("application/json")
 	public Response addPermission(
 			@PathParam("roleid") Integer roleId,
 			@PathParam("permissionid") Integer permissionId) {

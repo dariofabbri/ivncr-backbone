@@ -1,0 +1,19 @@
+<p id="item">
+<%
+if(alreadyPresent) {
+%>
+	<label class="checkbox">
+		<input type="checkbox" name="roles" value="<%=id%>" disabled>
+		<span class="muted"><%=rolename%></span>
+	</label>
+<%
+} else {
+%>
+	<label class="checkbox">
+		<input type="checkbox" name="roles" value="<%=id%>">
+		<%=rolename%>
+	</label>
+<%
+}
+%>
+</p>

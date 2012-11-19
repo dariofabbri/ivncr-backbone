@@ -9,6 +9,7 @@ import it.dariofabbri.ivncr.service.local.QueryResult;
 import it.dariofabbri.ivncr.service.local.ServiceFactory;
 import it.dariofabbri.ivncr.service.local.user.UserService;
 import it.dariofabbri.ivncr.service.rest.dto.RoleDTO;
+import it.dariofabbri.ivncr.service.rest.dto.RolesDTO;
 import it.dariofabbri.ivncr.service.rest.dto.UserDTO;
 import it.dariofabbri.ivncr.service.rest.dto.UsersDTO;
 import it.dariofabbri.ivncr.util.MappingUtil;
@@ -197,16 +198,19 @@ public class UserResource {
 			return Response.status(Status.NOT_FOUND).entity(nfe.getMessage()).build();
 		}
 
+		
 		MappingUtil<RoleDTO> mu = new MappingUtil<RoleDTO>();
-		List<RoleDTO> dto = mu.map(roles, RoleDTO.class);
+		List<RoleDTO> list = mu.map(roles, RoleDTO.class);
+		RolesDTO dto = new RolesDTO();
+		dto.setRecords(roles.size());
+		dto.setResults(list);
 
 		return Response.ok().entity(dto).build();
 	}
 	
 	
 	@PUT
-	@Path("/{id}/roles")
-	@Consumes("application/json")
+	@Path("/{userid}/roles/{roleid}")
 	public Response addRole(
 			@PathParam("userid") Integer userId, 
 			@PathParam("roleid") Integer roleId) {
