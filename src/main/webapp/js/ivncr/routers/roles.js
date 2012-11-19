@@ -39,16 +39,23 @@ define([
 		
 		create: function() {
 
+			var model = new Role();
+			
 			var view = new RolesEditView({
-				model: new Role()
+				model: model
 			});
+			
 			this.show(view, "#container");
 		},
 		
 		edit: function(id) {
 			
-			var model = this.collection.get(id);
-			var view = new RolesEditView({model: model});
+			var model = new Role({id: id});
+			model.fetch();
+
+			var view = new RolesEditView({
+				model: model
+			});
 			
 			this.show(view, "#container");
 		}

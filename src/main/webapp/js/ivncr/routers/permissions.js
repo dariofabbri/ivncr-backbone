@@ -39,16 +39,23 @@ define([
 		
 		create: function() {
 
+			var model = new Permission();
+			
 			var view = new PermissionsEditView({
-				model: new Permission()
+				model: model
 			});
+			
 			this.show(view, "#container");
 		},
 		
 		edit: function(id) {
 			
-			var model = this.collection.get(id);
-			var view = new PermissionsEditView({model: model});
+			var model = new Permission({id: id});
+			model.fetch();
+			
+			var view = new PermissionsEditView({
+				model: model
+			});
 			
 			this.show(view, "#container");
 		}

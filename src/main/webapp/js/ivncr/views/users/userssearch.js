@@ -63,7 +63,7 @@ define([
 			
 			// Set focus to first field.
 			//
-			$("input#permissionstring", this.el).focus();
+			$("input#username", this.el).focus();
 		}
 	});
 	

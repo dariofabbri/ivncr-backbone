@@ -39,20 +39,24 @@ define([
 		
 		create: function() {
 
+			var model = new UserWithPassword();
+			
 			var view = new UsersEditView({
-				model: new UserWithPassword()
+				model: model
 			});
+			
 			this.show(view, "#container");
 		},
 		
 		edit: function(id) {
 			
-			var model = new UserWithPassword(_.pick(this.collection.get(id).toJSON(),
-					"id",
-					"username", 
-					"firstName", 
-					"lastName", 
-					"description"));
+			// Fetch the existing user from the server. It could have been
+			// possible to use data stored in the list (that is in the
+			// existing collection) but this could have been changed in the
+			// meanwhile by another user.
+			//
+			var model = new UserWithPassword({id: id});
+			model.fetch();
 
 			var view = new UsersEditView({
 				model: model
