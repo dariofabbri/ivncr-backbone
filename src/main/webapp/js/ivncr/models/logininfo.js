@@ -18,7 +18,24 @@ define([
 
 		urlRoot: "/ivncr/api/security/sessions",
 		
-		idAttribute: "securityToken"
+		idAttribute: "securityToken",
+		
+		checkGrant: function(action) {
+			
+			var grants = this.get("grants");
+			
+			if(!grants)
+				return false;
+			
+			var found = _.find(grants, function(grant) {
+				return grant.action === action;
+			});
+			
+			if(!found)
+				return false;
+			
+			return found.allowed;
+		}
 	});
 	
 	return loginInfo;

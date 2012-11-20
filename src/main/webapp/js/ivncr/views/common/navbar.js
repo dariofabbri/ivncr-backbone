@@ -14,6 +14,18 @@ define([
 		render: function() {
 
 			this.$el.html(_.template(navbarTemplate, this.model.toJSON()));
+			
+			var that = this;
+			_.each($("ul.dropdown-menu>li[action]", this.$el), function(item) {
+				
+				var action = $(item).attr("action");
+				$(item).removeAttr("action");
+				$(item).removeClass("disabled");
+				if(!that.model.checkGrant(action)) {
+					$(item).addClass("disabled");
+				}
+			});
+			
 			return this;
 		},
 		

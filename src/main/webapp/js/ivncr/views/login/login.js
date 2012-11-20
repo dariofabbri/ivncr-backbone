@@ -50,11 +50,26 @@ define([
 			application.loginInfo.save({username: username,	password: password}, {
 				success: function() {
 					
+					// Set up options for grants collection fetch.
+					//
+					var options = {
+						async: false,
+						data: {
+							actions: application.grantActions.join(",")
+						}
+					};
+
+					// Execute server call.
+					//
 					var grants = new Grants();
-					grants.url += "?actions=gino,luigi,mario";
-					grants.fetch({async: false});
+					grants.fetch(options);
+					
+					// Set grants property in loginInfo object.
+					//
 					application.loginInfo.set("grants", grants.toJSON());
 					
+					// Move to home page.
+					//
 					Backbone.history.navigate("home", true);
 				},
 				error: function() {

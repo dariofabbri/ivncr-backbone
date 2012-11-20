@@ -208,6 +208,30 @@ require([
 			};
 		})();
 
+		application.grantActions = [
+			"permissions:list",
+			"permissions:get",
+			"permissions:delete",
+			"permissions:create",
+			"permissions:update",
+			"roles:list",
+			"roles:get",
+			"roles:delete",
+			"roles:create",
+			"roles:update",
+			"roles:getpermissions",
+			"roles:addpermission",
+			"roles:deletepermission",
+			"reports:basictest",
+			"users:list",
+			"users:get",
+			"users:delete",
+			"users:create",
+			"users:update",
+			"users:getroles",
+			"users:addrole",
+			"users:deleterole"
+		];
 		
 		application.routers = [];
 		application.routers.push(new MainRouter());
