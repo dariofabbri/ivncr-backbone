@@ -175,6 +175,7 @@ require([
 				// Set status code management.
 				//
 				options.statusCode = {
+						
 					401: function() {
 						
 						// Clean application's login info.
@@ -185,7 +186,12 @@ require([
 						//
 						application.modalDialog.show({
 							title: "Errore",
-							message: "Il server ha rilevato un accesso non autorizzato, probabilmente la sessione è scaduta. Premi OK per visualizzare la pagina di login.",
+							message: 
+								"Il server ha rilevato un accesso non autorizzato, " +
+								"è possibile che la sessione sia scaduta " +
+								"o che sia stata inaspettatamente selezionata " +
+								"una funzione per la quale non si hanno le necessarie autorizzazioni. " +
+								"Premi OK per visualizzare la pagina di login.",
 							okCaption: "OK",
 							okCallback: function() {
 								Backbone.history.navigate("login", true);

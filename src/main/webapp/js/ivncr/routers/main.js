@@ -29,7 +29,7 @@ define([
 		home: function() {
 			this.close("#container");
 
-			var navbar = new NavbarView();
+			var navbar = new NavbarView({model: application.loginInfo});
 			this.show(navbar, "#navbar");
 			
 			var footer = new FooterView({model: application.loginInfo});

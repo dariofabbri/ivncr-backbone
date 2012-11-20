@@ -82,12 +82,10 @@ public class DatabaseBackedRealm extends AuthorizingRealm {
 			throw new AuthorizationException(
 					"PrincipalCollection method argument cannot be null.");
 		}
-		
+
+		// Extract username from principal.
+		//
 		String username = (String) getAvailablePrincipal(principals);
-		
-		if(!username.equals("admin"))
-			throw new RuntimeException("Only admin user configured.");
-		
 		
 		// Look up roles.
 		//

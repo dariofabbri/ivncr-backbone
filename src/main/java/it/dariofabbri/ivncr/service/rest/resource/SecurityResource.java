@@ -125,11 +125,11 @@ public class SecurityResource {
 	
 	
 	@GET
-	@Path("/permissions/{action}")
-	public Response checkPermission(
+	@Path("/grants/{action}")
+	public Response checkGrant(
 			@PathParam("action") String action) {
 
-		logger.debug("checkPermission called!");
+		logger.debug("checkGrant called!");
 
 		Subject currentUser = SecurityUtils.getSubject();
 		
@@ -147,11 +147,11 @@ public class SecurityResource {
 	
 	
 	@GET
-	@Path("/permissions")
-	public Response checkPermissions(
+	@Path("/grants")
+	public Response checkGrants(
 			@QueryParam("actions") String actions) {
 
-		logger.debug("checkPermissions called!");
+		logger.debug("checkGrants called!");
 
 		String[] permissions = actions.split(",");
 		

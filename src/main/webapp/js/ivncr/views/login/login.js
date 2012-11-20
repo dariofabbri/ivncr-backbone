@@ -2,9 +2,10 @@ define([
 	"underscore", 
 	"backbone",
 	"jquery",
+	"ivncr/collections/grants",
 	"text!templates/login/loginpanel.html",
 	"text!templates/common/alert.html"], 
-	function(_, Backbone, $, loginPanelTemplate, alertTemplate) {
+	function(_, Backbone, $, Grants, loginPanelTemplate, alertTemplate) {
 	
 	var loginView = Backbone.View.extend({
 	
@@ -48,6 +49,12 @@ define([
 			
 			application.loginInfo.save({username: username,	password: password}, {
 				success: function() {
+					
+					var grants = new Grants();
+					grants.url += "?actions=gino,luigi,mario";
+					grants.fetch({async: false});
+					application.loginInfo.set("grants", grants.toJSON());
+					
 					Backbone.history.navigate("home", true);
 				},
 				error: function() {

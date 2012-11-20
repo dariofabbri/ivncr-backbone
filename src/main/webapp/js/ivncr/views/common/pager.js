@@ -44,9 +44,17 @@ define([
 		},
 		
 		gotoPage: function(e) {
-			
+
 			e.preventDefault();
 			
+			// Skip disabled buttons.
+			//
+			if($(e.target).parent().hasClass("disabled")) {
+				return;
+			}
+
+			// Request new page to router.
+			//
 			var page = $(e.target).attr("id");
 			Backbone.history.navigate(this.baseUrl + page, true);
 		}
