@@ -40,7 +40,7 @@ define([
 			// If the collection has filters applied, 
 			// show the special button to clean up filters.
 			//
-			$("a#reset-filters", this.el).tooltip("show");
+			$("a#reset-filters", this.el).tooltip();
 
 			// Render an item view for each model in the collection.
 			//
